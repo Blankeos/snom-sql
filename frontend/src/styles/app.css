@@ -1,6 +1,12 @@
+@import url('@/assets/fonts/zed-mono-1.2.0/zed-mono.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+	font-family: 'Zed Mono Extended';
+}
 
 .btn {
 	@apply rounded-full;
