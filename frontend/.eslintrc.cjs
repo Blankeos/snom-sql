@@ -26,6 +26,15 @@ module.exports = {
 			parserOptions: {
 				parser: '@typescript-eslint/parser'
 			}
+		},
+		{
+			'prefer-const': [
+				'ignore',
+				{
+					destructuring: 'any',
+					ignoreReadBeforeAssign: false
+				}
+			]
 		}
 	]
 };
