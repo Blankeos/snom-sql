@@ -1,11 +1,67 @@
 <script lang="ts">
+	import IconDatabase from '~icons/ph/database-duotone';
 	import Resizable from '@/components/Resizable.svelte';
+	import IconSearch from '~icons/ph/magnifying-glass-bold';
+
+	let navWidth = $state('300px');
 </script>
 
-<div class="flex">
-	<Resizable directions={{ north: true, east: true, south: true, west: true }}>
-		<div class="text-center h-full w-full flex justify-center items-center">Pane 1</div>
+<svelte:body class="overflow-hidden" />
+
+<div class="flex h-screen bg-white">
+	<Resizable
+		directions={{ east: true }}
+		minWidth="120px"
+		maxWidth="320px"
+		width={navWidth}
+		class="h-full"
+		handleBarWidth="2px"
+	>
+		<div class="flex h-full w-full flex-col gap-y-5 overflow-hidden text-center">
+			<div class="flex items-center gap-x-2 px-5 py-5">
+				<IconDatabase class="flex-shrink-0" />
+				<span>Snom SQL</span>
+			</div>
+
+			<div class="mx-2 flex flex-col items-start gap-y-2">
+				<span class="text-xs text-neutral-500">Database</span>
+				<div
+					class="flex h-10 w-full items-center gap-x-2 rounded-md bg-neutral-100 px-2 text-neutral-500"
+				>
+					<IconSearch class="flex-shrink-0" />
+					<input class="bg-transparent focus:outline-none" />
+				</div>
+			</div>
+
+			<div class="mx-2 flex flex-col items-start gap-y-2">
+				<span class="text-xs text-neutral-500">Schema</span>
+				<button class="btn" onclick={() => (navWidth = '30px')}>Change to 30px</button>
+				<!-- <div
+					class="flex h-10 w-full items-center gap-x-2 rounded-md bg-neutral-100 px-2 text-neutral-500"
+				>
+					<IconSearch class="flex-shrink-0" />
+					<input class="bg-transparent focus:outline-none" />
+				</div> -->
+			</div>
+		</div>
 	</Resizable>
+	<main class="flex flex-1 flex-col">
+		<div
+			class="grid flex-1 place-items-center overflow-hidden bg-neutral-50 text-sm text-neutral-400"
+		>
+			🚧 EDITOR WILL BE HERE
+			<!--  -->
+		</div>
+		<Resizable
+			class="w-full overflow-hidden"
+			height="500px"
+			minHeight="20px"
+			directions={{ north: true }}
+			handleBarWidth="2px"
+		>
+			<div></div>
+		</Resizable>
+	</main>
 </div>
 
 <!-- <div class="bg-pink-300 h-52">

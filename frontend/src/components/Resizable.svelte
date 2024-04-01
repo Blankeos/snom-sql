@@ -1,13 +1,55 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	const getStringSize = (n: number | string): string => {
+		n = n.toString();
+		if (n === 'auto') {
+			return n;
+		}
+		if (n.endsWith('px')) {
+			return n;
+		}
+		if (n.endsWith('%')) {
+			return n;
+		}
+		if (n.endsWith('vh')) {
+			return n;
+		}
+		if (n.endsWith('vw')) {
+			return n;
+		}
+		if (n.endsWith('vmax')) {
+			return n;
+		}
+		if (n.endsWith('vmin')) {
+			return n;
+		}
+		return `${n}px`;
+	};
+
+	import { type Snippet } from 'svelte';
 	import type { Action } from 'svelte/action';
 	import { spring } from 'svelte/motion';
 
 	type Props = {
+		class?: string;
+
 		children: Snippet;
-		minHeight?: string;
-		minWidth?: string;
-		gutterWidth?: string;
+
+		/** @defaultValue 'auto'. */
+		width?: number | string;
+		/** @defaultValue 'auto'. */
+		height?: number | string;
+
+		/** @defaultValue undefined. */
+		minHeight?: number | string;
+		/** @defaultValue undefined. */
+		maxHeight?: number | string;
+		/** @defaultValue undefined. */
+		minWidth?: number | string;
+		/** @defaultValue undefined. */
+		maxWidth?: number | string;
+
+		/** Width of the handlebar. @defaultValue "4px" */
+		handleBarWidth?: number | string;
 		/** @defaultValue false */
 		directions?:
 			| boolean
@@ -16,10 +58,29 @@
 					west?: boolean;
 					east?: boolean;
 					south?: boolean;
+					/** WIP: */
+					northwest?: boolean;
+					/** WIP: */
+					northeast?: boolean;
+					/** WIP: */
+					southwest?: boolean;
+					/** WIP: */
+					southeast?: boolean;
 			  };
 	};
 
-	let { children, gutterWidth = '2px', directions: enable = false }: Props = $props();
+	let {
+		children,
+		width = $bindable<number | string>('auto'),
+		height = $bindable<number | string>('auto'),
+		minHeight,
+		maxHeight,
+		minWidth,
+		maxWidth,
+		class: className,
+		handleBarWidth: handleWidth = '4px',
+		directions: enable = false
+	}: Props = $props();
 
 	let _directions = $derived.by(() => {
 		if (enable === true)
@@ -47,31 +108,36 @@
 	});
 
 	let dragging = $state(false);
+	let draggingDirection = $state<'north' | 'west' | 'east' | 'south' | null>(null);
 
-	let currentWidth = spring(500, { precision: 1, stiffness: 1 });
-	let currentHeight = spring(500, { precision: 1, stiffness: 1 });
+	let currentWidth = spring<number | undefined>(undefined, { precision: 0.8 });
+	let currentHeight = spring<number | undefined>(undefined, { precision: 0.8 });
 
 	let splitPaneRef: HTMLDivElement;
 
 	function setHeightNorth(this: Window, ev: MouseEvent) {
+		draggingDirection = 'north';
 		const rect = splitPaneRef.getBoundingClientRect();
 		const height = rect.bottom - ev.clientY;
 		$currentHeight = height;
 	}
 
 	function setHeightSouth(this: Window, ev: MouseEvent) {
+		draggingDirection = 'south';
 		const rect = splitPaneRef.getBoundingClientRect();
 		const height = ev.clientY - rect.top;
 		$currentHeight = height;
 	}
 
 	function setWidthEast(this: Window, ev: MouseEvent) {
+		draggingDirection = 'east';
 		const rect = splitPaneRef.getBoundingClientRect();
 		const width = ev.clientX - rect.left;
 		$currentWidth = width;
 	}
 
 	function setWidthWest(this: Window, ev: MouseEvent) {
+		draggingDirection = 'west';
 		const rect = splitPaneRef.getBoundingClientRect();
 		const width = rect.right - ev.clientX;
 		$currentWidth = width;
@@ -90,6 +156,7 @@
 
 			const onmouseup = () => {
 				dragging = false;
+				draggingDirection = null;
 
 				window.removeEventListener('mousemove', callback, false);
 				window.removeEventListener('mouseup', onmouseup, false);
@@ -109,81 +176,44 @@
 		};
 	};
 
-	// import { clamp } from '@/lib/utils/clamp';
-	// import { createEventDispatcher } from 'svelte';
+	$effect(() => {
+		switch (draggingDirection) {
+			case 'east':
+			case 'west':
+				document.body.style.cursor = 'ew-resize';
+				break;
+			case 'north':
+			case 'south':
+				document.body.style.cursor = 'ns-resize';
+				break;
+			case null:
+				document.body.style.cursor = 'auto';
+		}
+	});
 
-	// const dispatch = createEventDispatcher();
-
-	// export let orientation: 'vertical' | 'horizontal' = 'horizontal';
-	// export let pos = 50;
-	// export let fixed = false;
-	// export let min = 50;
-
-	// const refs: any = {};
-
-	// let dragging = false;
-
-	// function setPos(event: MouseEvent & { clientY: number; clientX: number }) {
-	// 	const { top, bottom, left, right } = refs.container.getBoundingClientRect();
-
-	// 	const extents = orientation === 'vertical' ? [top, bottom] : [left, right];
-
-	// 	const px = clamp(
-	// 		orientation === 'vertical' ? event.clientY : event.clientX,
-	// 		extents[0] + min,
-	// 		extents[1] - min
-	// 	);
-
-	// 	pos = (100 * (px - extents[0])) / (extents[1] - extents[0]);
-
-	// 	dispatch('change');
-	// }
-
-	// function drag(node: HTMLElement, callback: (event: MouseEvent) => void) {
-	// 	const mousedown = (event: MouseEvent & { which: number }) => {
-	// 		if (event.which !== 1) return;
-
-	// 		event.preventDefault();
-
-	// 		dragging = true;
-
-	// 		const onmouseup = () => {
-	// 			dragging = false;
-
-	// 			window.removeEventListener('mousemove', callback, false);
-	// 			window.removeEventListener('mouseup', onmouseup, false);
-	// 		};
-
-	// 		window.addEventListener('mousemove', callback, false);
-	// 		window.addEventListener('mouseup', onmouseup, false);
-	// 	};
-
-	// 	node.addEventListener('mousedown', mousedown, false);
-
-	// 	return {
-	// 		destroy() {
-	// 			/** @ts-ignore */
-	// 			node.removeEventListener('mousedown', onmousedown, false);
-	// 		}
-	// 	};
-	// }
-
-	// $: side = orientation === 'horizontal' ? 'left' : 'top';
-	// $: dimension = orientation === 'horizontal' ? 'width' : 'height';
+	let _width = $derived(getStringSize($currentWidth ?? width));
+	let _height = $derived(getStringSize($currentHeight ?? height));
 </script>
 
+<!-- // 	style:width={currentWidth ? `${$currentWidth}px` : undefined}
+// style:height={currentHeight ? `${$currentHeight}px` : undefined} -->
 <div
+	class={className}
 	bind:this={splitPaneRef}
 	style="position: relative; will-change: 'height', 'width';"
-	style:width={`${$currentWidth}px`}
-	style:height={`${$currentHeight}px`}
+	style:width={_width}
+	style:height={_height}
+	style:min-height={minHeight}
+	style:max-height={maxHeight}
+	style:min-width={minWidth}
+	style:max-width={maxWidth}
 >
 	<!-- North Handle -->
 	{#if _directions.north}
 		<div
 			style="position: absolute; left: 0px; right: 0px; top: 0px;"
-			style:height={gutterWidth}
-			class="bg-gray-500 cursor-ns-resize active:cursor-ns-resize"
+			style:height={handleWidth}
+			class="bg-gray-200 hover:cursor-ns-resize"
 			use:dragAction={setHeightNorth}
 		/>
 	{/if}
@@ -191,8 +221,8 @@
 	{#if _directions.south}
 		<div
 			style="position: absolute; left: 0px; right: 0px; bottom: 0px;"
-			style:height={gutterWidth}
-			class="bg-gray-500 cursor-ns-resize active:cursor-ns-resize"
+			style:height={handleWidth}
+			class="bg-gray-200 hover:cursor-ns-resize"
 			use:dragAction={setHeightSouth}
 		/>
 	{/if}
@@ -200,8 +230,8 @@
 	{#if _directions.east}
 		<div
 			style="position: absolute; right: 0px; top: 0px; bottom: 0px;"
-			style:width={gutterWidth}
-			class="bg-gray-500 cursor-ew-resize"
+			style:width={handleWidth}
+			class="bg-gray-200 hover:cursor-ew-resize"
 			use:dragAction={setWidthEast}
 		/>
 	{/if}
@@ -209,118 +239,10 @@
 	{#if _directions.west}
 		<div
 			style="position: absolute; left: 0px; top: 0px; bottom: 0px;"
-			style:width={gutterWidth}
-			class="bg-gray-500 cursor-ew-resize"
+			style:width={handleWidth}
+			class="bg-gray-200 hover:cursor-ew-resize"
 			use:dragAction={setWidthWest}
 		/>
 	{/if}
 	{@render children()}
 </div>
-
-<!-- <div class="container" bind:this={refs.container}>
-	<div class="pane" style="{dimension}: {pos}%;">
-		<slot name="a" />
-	</div>
-
-	<div class="pane" style="{dimension}: {100 - pos}%;">
-		<slot name="b" />
-	</div>
-
-	{#if !fixed}
-		<div class="{orientation} divider" style="{side}: calc({pos}% - 8px)" use:drag={setPos}></div>
-	{/if}
-</div>
-
-{#if dragging}
-	<div class="mousecatcher"></div>
-{/if} -->
-
-<!-- <style>
-	.container {
-		position: relative;
-		width: 100%;
-		height: 100%;
-	}
-
-	.pane {
-		position: relative;
-		float: left;
-		width: 100%;
-		height: 100%;
-	}
-
-	.mousecatcher {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(255, 255, 255, 0.01);
-	}
-
-	.divider {
-		position: absolute;
-		z-index: 10;
-		display: none;
-	}
-
-	.divider::after {
-		content: '';
-		position: absolute;
-		/* background-color: #eee; */
-		background-color: var(--second);
-	}
-
-	.horizontal {
-		padding: 0 8px;
-		width: 0;
-		height: 100%;
-		cursor: ew-resize;
-	}
-
-	.horizontal::after {
-		left: 8px;
-		top: 0;
-		width: 1px;
-		height: 100%;
-	}
-
-	.vertical {
-		padding: 8px 0;
-		width: 100%;
-		height: 0;
-		cursor: ns-resize;
-	}
-
-	.vertical::after {
-		top: 8px;
-		left: 0;
-		width: 100%;
-		height: 1px;
-	}
-
-	.left,
-	.right,
-	.divider {
-		display: block;
-	}
-
-	.left,
-	.right {
-		height: 100%;
-		float: left;
-	}
-
-	.top,
-	.bottom {
-		position: absolute;
-		width: 100%;
-	}
-
-	.top {
-		top: 0;
-	}
-	.bottom {
-		bottom: 0;
-	}
-</style> -->
