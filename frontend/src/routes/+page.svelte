@@ -3,7 +3,7 @@
 	import Resizable from '@/components/Resizable.svelte';
 	import IconSearch from '~icons/ph/magnifying-glass-bold';
 
-	let navWidth = $state('300px');
+	let navWidth = $state('100%');
 </script>
 
 <svelte:body class="overflow-hidden" />
@@ -13,8 +13,7 @@
 		directions={{ east: true }}
 		minWidth="120px"
 		maxWidth="320px"
-		width={navWidth}
-		class="h-full"
+		bind:width={navWidth}
 		handleBarWidth="2px"
 	>
 		<div class="flex h-full w-full flex-col gap-y-5 overflow-hidden text-center">
@@ -35,7 +34,7 @@
 
 			<div class="mx-2 flex flex-col items-start gap-y-2">
 				<span class="text-xs text-neutral-500">Schema</span>
-				<button class="btn" onclick={() => (navWidth = '30px')}>Change to 30px</button>
+				<button class="btn" onclick={() => (navWidth = '30px')}>Change to 30px | {navWidth}</button>
 				<!-- <div
 					class="flex h-10 w-full items-center gap-x-2 rounded-md bg-neutral-100 px-2 text-neutral-500"
 				>
