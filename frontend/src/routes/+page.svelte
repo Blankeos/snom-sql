@@ -48,7 +48,7 @@
 		<div
 			class="grid flex-1 place-items-center overflow-hidden bg-neutral-50 text-sm text-neutral-400"
 		>
-			🚧 EDITOR WILL BE HERE
+			🚧 EDITOR WILL BE HERE!
 			<!--  -->
 		</div>
 		<Resizable

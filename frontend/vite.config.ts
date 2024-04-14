@@ -10,6 +10,12 @@ export default defineConfig({
 			autoInstall: true
 		})
 	],
+	server: {
+		hmr: {
+			host: 'localhost',
+			protocol: 'ws'
+		}
+	},
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	}
