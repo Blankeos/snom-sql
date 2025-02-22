@@ -1,4 +1,4 @@
-import '@/styles/App.css';
+import '@/styles/app.css';
 
 import { type FlowProps, createSignal } from 'solid-js';
 
