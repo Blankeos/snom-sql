@@ -1,5 +1,5 @@
 import { IconLogo } from '@/assets/icons/icons';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { createSignal } from 'solid-js';
 
 export default function Page() {
