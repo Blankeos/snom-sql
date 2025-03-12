@@ -14,7 +14,7 @@ const __dirname = dirname(__filename);
 const root = resolve(__dirname, '.');
 
 // Tailwindcss
-import tailwindcss from "@tailwindcss/vite";
+import tailwindcss from '@tailwindcss/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({

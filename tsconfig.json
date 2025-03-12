@@ -17,12 +17,12 @@
       "@/*": ["./src/*"]
     },
     "types": [
-      "@types/bun",
       "vite-plugin-solid-svg/types-component-solid", // must be before vite/client
+      "@types/bun",
       "vike-solid/client"
     ],
     "jsx": "preserve",
     "jsxImportSource": "solid-js"
   },
-  "exclude": ["dist"]
+  "exclude": ["dist", "src-tauri"]
 }

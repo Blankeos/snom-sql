@@ -1,11 +1,16 @@
 {
-    "useTabs": false,
-    "singleQuote": true,
-    "trailingComma": "es5",
-    "printWidth": 100,
-    "plugins": ["prettier-plugin-tailwindcss"],
-    "tailwindConfig": "./tailwind.config.js",
-    "tailwindFunctions": ["tv"],
-    "pluginSearchDirs": ["."]
-  }
-  
+  "useTabs": false,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "printWidth": 100,
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindFunctions": ["tv"],
+  "overrides": [
+    {
+      "files": ["src-tauri/**"],
+      "options": {
+        "formatter": "off"
+      }
+    }
+  ]
+}

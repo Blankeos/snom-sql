@@ -4,4 +4,4 @@
 // - Custom icons (.svg) can be added in this folder and exported thanks to vite-plugin-solid-svg.
 // - Get your icons from https://icones.js.org/
 // ===========================================================================
-export { default as IconLogo } from "./logo.svg";
+export { default as IconLogo } from './logo.svg';
