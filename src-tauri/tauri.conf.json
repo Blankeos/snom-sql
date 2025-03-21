@@ -26,12 +26,6 @@
       "csp": null
     },
     "windows": [
-      {
-        "title": "tauri-solid",
-        "width": 800,
-        "height": 600,
-        "useHttpsScheme": true
-      }
     ]
   }
 }

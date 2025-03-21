@@ -6,6 +6,7 @@ import vikeSolid from 'vike-solid/vite';
 import vike from 'vike/plugin';
 
 // Vite
+import vikeRoutegen from '@blankeos/vike-routegen';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
@@ -18,7 +19,13 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [vike({ prerender: true }), vikeSolid(), solidSvg(), tailwindcss()],
+  plugins: [
+    vike({ prerender: true }),
+    vikeSolid(),
+    solidSvg({ defaultAsComponent: false }),
+    tailwindcss(),
+    vikeRoutegen(),
+  ],
   resolve: {
     alias: {
       '@': resolve(root, 'src'),

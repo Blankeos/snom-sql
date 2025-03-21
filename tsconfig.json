@@ -17,7 +17,7 @@
       "@/*": ["./src/*"]
     },
     "types": [
-      "vite-plugin-solid-svg/types-component-solid", // must be before vite/client
+      "vite-plugin-solid-svg/types", // must be before vite/client
       "@types/bun",
       "vike-solid/client"
     ],
