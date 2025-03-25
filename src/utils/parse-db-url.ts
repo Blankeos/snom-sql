@@ -2,32 +2,38 @@ interface PostgresUrlParts {
   user: string;
   password: string;
   host: string;
-  port: string;
+  port?: string; // Made optional
   databaseName: string;
 }
 
 export function parsePostgresUrl(url: string): PostgresUrlParts | null {
-  // Regular expression to match PostgreSQL URL components
-  const regex = /^([^:]+):\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)$/;
+  // Updated regex to make port optional
+  const regex = /^([^:]+):\/\/([^:]+):([^@]+)@([^:]+)(?::(\d+))?\/(.+)$/;
 
   const match = url.match(regex);
-
   if (!match) {
     return null;
   }
 
-  // Destructure the matched groups
+  // Destructure with optional port (group 5 might be undefined)
   const [, databaseType, user, password, host, port, databaseName] = match;
 
-  return {
+  // Return object with optional port
+  const result: PostgresUrlParts = {
     user,
     password,
     host,
-    port,
     databaseName,
   };
+
+  if (port) {
+    result.port = port;
+  }
+
+  return result;
 }
 
 export function serializePostgresUrl(parts: PostgresUrlParts): string {
-  return `postgresql://${parts.user}:${parts.password}@${parts.host}:${parts.port}/${parts.databaseName}`;
+  const portPart = parts.port ? `:${parts.port}` : '';
+  return `postgresql://${parts.user}:${parts.password}@${parts.host}${portPart}/${parts.databaseName}`;
 }

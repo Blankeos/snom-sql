@@ -8,7 +8,6 @@ describe('parsePostgresUrl', () => {
     const result = parsePostgresUrl(url);
 
     expect(result).toEqual({
-      databaseType: 'postgresql',
       user: 'postgres',
       password: 'password123',
       host: 'localhost',
@@ -22,7 +21,6 @@ describe('parsePostgresUrl', () => {
     const result = parsePostgresUrl(url);
 
     expect(result).toEqual({
-      databaseType: 'postgresql',
       user: 'admin',
       password: 'secret123',
       host: 'server',
@@ -36,7 +34,6 @@ describe('parsePostgresUrl', () => {
     const result = parsePostgresUrl(url);
 
     expect(result).toEqual({
-      databaseType: 'postgresql',
       user: 'user',
       password: 'pwd',
       host: 'host',
@@ -70,10 +67,16 @@ describe('parsePostgresUrl', () => {
     expect(result).toBeNull();
   });
 
-  it('returns null for missing port', () => {
+  it('missing port is okay', () => {
     const url = 'postgresql://user:password@localhost/db';
     const result = parsePostgresUrl(url);
-    expect(result).toBeNull();
+
+    expect(result).toEqual({
+      user: 'user',
+      password: 'password',
+      host: 'localhost',
+      databaseName: 'db',
+    });
   });
 
   it('returns null for missing database name', () => {
@@ -100,7 +103,6 @@ describe('parsePostgresUrl', () => {
     const result = parsePostgresUrl(url);
 
     expect(result).toEqual({
-      databaseType: 'postgresql',
       user: 'user123',
       password: 'pass456',
       host: 'localhost',
@@ -114,7 +116,6 @@ describe('parsePostgresUrl', () => {
     const result = parsePostgresUrl(url);
 
     expect(result).toEqual({
-      databaseType: 'postgresql',
       user: 'u',
       password: 'p',
       host: 'h',
