@@ -7,8 +7,8 @@ export type SideBarState = {};
 // ===========================================================================
 
 export type AppContextValue = {
-  sidebarFocus: () => 'connections' | 'schema';
-  mainStuff: [];
+  // sidebarFocus: () => 'connections' | 'schema';
+  // mainStuff: [];
 };
 
 const AppContext = createContext({} as AppContextValue);

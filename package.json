@@ -21,9 +21,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ark-ui/solid": "^5.1.1",
+    "@ark-ui/solid": "^5.3.1",
     "@kobalte/core": "^0.13.9",
-    "@tailwindcss/vite": "^4.0.15",
+    "@tailwindcss/vite": "^4.0.16",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-shell": "~2",
     "bagon-hooks": "^0.0.4",
@@ -39,16 +39,16 @@
   "devDependencies": {
     "@blankeos/vike-routegen": "^0.0.2",
     "@tauri-apps/cli": "^2",
-    "@types/bun": "^1.2.5",
+    "@types/bun": "^1.2.6",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4.0.15",
+    "tailwindcss": "^4.0.16",
     "typescript": "^5.8.2",
-    "vike": "^0.4.226",
+    "vike": "^0.4.227",
     "vike-solid": "^0.7.9",
-    "vite": "^6.2.2",
+    "vite": "^6.2.3",
     "vite-plugin-solid-svg": "^0.8.1",
     "vitest": "^3.0.9"
   }
