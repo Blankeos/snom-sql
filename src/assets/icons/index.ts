@@ -14,3 +14,7 @@ export { default as IconSetting } from './solar_settings-line-duotone.svg?compon
 export { default as IconPostgresql } from './devicon_postgresql.svg?component-solid';
 export { default as IconSqlite } from './devicon_sqlite.svg?component-solid';
 export { default as IconMySQL } from './logos_mysql.svg?component-solid';
+
+export { default as IconQueryFiles } from './hugeicons_ai-browser.svg';
+export { default as IconDatabaseAdd } from './hugeicons_database-add.svg';
+export { default as IconDatabaseSync } from './hugeicons_database-sync.svg';
