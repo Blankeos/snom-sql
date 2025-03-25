@@ -4,13 +4,13 @@ import Dexie, { EntityTable } from 'dexie';
 // Types
 // ===========================================================================
 export enum DatabaseType {
-  Postgres,
-  SQLite,
-  MySQL,
+  Postgres = 'postgres',
+  MySQL = 'mysql',
+  SQLite = 'sqlite',
 }
 
 interface DatabaseConnection {
-  id: string;
+  id: number;
   database_type: DatabaseType;
   host: string;
   port: string;
@@ -18,11 +18,12 @@ interface DatabaseConnection {
   password: string;
   database_name: string;
   database_uri: string;
+  nickname?: string;
   schema?: string;
 }
 
 interface DatabaseQuery {
-  id: string;
+  id: number;
   content: string;
   connection_id: string; // Relates to DatabaseConnection
 }
@@ -38,7 +39,9 @@ interface DexieDatabase extends Dexie {
 const db = new Dexie('snomsql-db') as DexieDatabase;
 
 db.version(1).stores({
-  sheets: '++id, content, created_at, last_opened_at, name, source_url',
+  databaseConnections:
+    '++id, database_type, host, port, user, password, database_name, database_uri, nickname, schema',
+  databaseQueries: '++id, content, connection_id',
 });
 
 export { db };

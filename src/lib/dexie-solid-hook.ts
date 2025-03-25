@@ -1,5 +1,5 @@
 import { liveQuery } from 'dexie';
-import { onMount } from 'solid-js';
+import { Accessor, createEffect, on, onCleanup } from 'solid-js';
 import { createStore, reconcile } from 'solid-js/store';
 
 interface LiveQueryResult<T> {
@@ -7,21 +7,38 @@ interface LiveQueryResult<T> {
   error?: Error;
 }
 
-export function useLiveQuery<T>(querier: () => T | Promise<T>): LiveQueryResult<T> {
+/**
+ * Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *
+ * @param querier
+ * @param deps
+ * @returns
+ */
+export function useLiveQuery<T>(
+  querier: () => T | Promise<T>,
+  deps: Accessor<any> | Array<Accessor<any>> = []
+): LiveQueryResult<T> {
   // @ts-ignore
   const [store, setStore] = createStore<LiveQueryResult<T>>({});
 
-  onMount(() => {
-    const observable = liveQuery(querier);
+  createEffect(
+    // @ts-ignore
+    on(deps, () => {
+      const observable = liveQuery(querier);
 
-    observable.subscribe((value) => {
-      setStore(
-        reconcile({
-          data: value,
-        })
-      );
-    });
-  });
+      const subscription = observable.subscribe((value) => {
+        setStore(
+          reconcile({
+            data: value,
+          })
+        );
+      });
+
+      onCleanup(() => {
+        subscription.unsubscribe();
+      });
+    })
+  );
 
   return store as LiveQueryResult<T>;
 }
