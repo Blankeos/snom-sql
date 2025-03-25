@@ -7,7 +7,7 @@ import { Toaster } from 'solid-sonner';
 export default function RootLayout(props: FlowProps) {
   return (
     <ThemeContextProvider>
-      <div class="h-screen overflow-hidden rounded-lg bg-[#d4d2e8] p-1.5">
+      <div class="bg-background-border h-screen overflow-hidden rounded-lg p-1.5">
         <div class="box-sizing-[border-box] relative h-full overflow-hidden rounded-md will-change-[width,height]">
           <div data-tauri-drag-region class="titlebar">
             {/* <div class="titlebar-button" id="titlebar-minimize">

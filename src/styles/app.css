@@ -36,6 +36,8 @@
     --max: #ffffff;
     --max-100: #f7f7f9;
     --background-darker: #f8fafc;
+    --background-border: #d4d2e8;
+
     --background: hsl(0, 0%, 100%);
     --foreground: hsl(0, 0%, 3.9%);
     --card: hsl(0, 0%, 100%);
@@ -63,6 +65,8 @@
     --max: hsl(0, 0%, 10%);
     --max-100: hsl(0, 0%, 8%);
     --background-darker: hsl(0, 0%, 8%);
+    --background-border: hsl(0, 0%, 20%);
+
     --background: hsl(0, 0%, 10%);
     --foreground: hsl(0, 0%, 98%);
     --card: hsl(0, 0%, 3.9%);
@@ -89,7 +93,9 @@
 @theme {
   --color-max: var(--max);
   --color-max-100: var(--max-100);
+  --color-background-border: var(--background-border);
   --color-background-darker: var(--background-darker);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
