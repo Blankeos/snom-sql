@@ -39,6 +39,7 @@ body {
 /* Themeing */
 @layer base {
   :root {
+    color: #333;
     --max: #ffffff;
     --max-100: #f7f7f9;
     --background-darker: #f8fafc;
