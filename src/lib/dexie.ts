@@ -24,8 +24,10 @@ interface DatabaseConnection {
 
 interface DatabaseQuery {
   id: number;
+  /** Only present if there's it's a query related to a connection. */
+  connection_id?: number;
   content: string;
-  connection_id: string; // Relates to DatabaseConnection
+  nickname?: string;
 }
 
 interface DexieDatabase extends Dexie {
@@ -41,7 +43,7 @@ const db = new Dexie('snomsql-db') as DexieDatabase;
 db.version(1).stores({
   databaseConnections:
     '++id, database_type, host, port, user, password, database_name, database_uri, nickname, schema',
-  databaseQueries: '++id, content, connection_id',
+  databaseQueries: '++id, content, connection_id, nickname',
 });
 
 export { db };

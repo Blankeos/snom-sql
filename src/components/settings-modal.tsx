@@ -1,7 +1,7 @@
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useThemeContext } from '@/contexts/theme';
 import { DialogRootProps } from '@kobalte/core/dialog';
 import { VoidProps } from 'solid-js';
-import { Dialog, DialogContent } from './dialog';
 
 type SettingsModalProps = {} & DialogRootProps;
 
