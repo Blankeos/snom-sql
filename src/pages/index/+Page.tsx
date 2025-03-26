@@ -1,6 +1,9 @@
 import {
+  IconDatabase,
   IconDatabaseAdd,
   IconDatabaseSchema,
+  IconFormat,
+  IconPlay,
   IconQueryFiles,
   IconRoundedCornerBL,
   IconSetting,
@@ -26,7 +29,7 @@ export default function Page() {
   // ===========================================================================
   // States
   // ===========================================================================
-  const { sidebarFocus, setPanelGroupAPI } = useAppContext();
+  const { sidebarFocus, setPanelGroupAPI, sidebarActive, setSidebarActive } = useAppContext();
 
   const [settingsModalIsOpen, settingsModalActions] = useDisclosure(false);
 
@@ -72,7 +75,16 @@ export default function Page() {
           </div>
         </Panel>
         <ResizeHandle class="!bg-max-100 relative" />
-        <Panel id="panel-2" initialSize={100} class="bg-background">
+        <Panel id="panel-2" initialSize={100} class="bg-background relative">
+          <Show when={!sidebarActive()}>
+            <Button
+              class="absolute top-2 left-2 flex gap-x-1"
+              onClick={() => setSidebarActive(true)}
+            >
+              <IconDatabase class="h-4 w-4 text-sky-300" />
+              Snom SQL
+            </Button>
+          </Show>
           <Switch
             fallback={
               <>
@@ -84,7 +96,32 @@ export default function Page() {
                   mount={document.getElementById(portalDestinations[0])!}
                   ref={(x) => (x.style.display = 'contents')}
                 >
-                  <textarea class="h-full w-full">This is the text area 🙏</textarea>
+                  <div class="relative h-full w-full">
+                    <textarea class="h-full w-full">This is the text area 🙏</textarea>
+                    <div class="absolute right-0 bottom-0 left-0 flex items-center gap-x-2 p-3">
+                      <Tippy props={{ arrow: false }} content="Format">
+                        <Button size="icon" class="rounded-full">
+                          <IconFormat class="h-4 w-4" />
+                        </Button>
+                      </Tippy>
+                      <Tippy
+                        props={{ arrow: false }}
+                        content={
+                          <span class="flex gap-x-2">
+                            <Kbd>
+                              <span>⌘</span>
+                              <span>Enter</span>
+                            </Kbd>
+                          </span>
+                        }
+                      >
+                        <Button class="flex gap-x-1.5">
+                          <IconPlay class="h-4 w-4 text-green-500" />
+                          Run All
+                        </Button>
+                      </Tippy>
+                    </div>
+                  </div>
                 </Portal>
                 <Portal
                   mount={document.getElementById(portalDestinations[1])!}

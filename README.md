@@ -1,6 +1,10 @@
-# Tauri + Solid + Vike + Typescript
+# SnomSQL
 
-This template should help get you started developing with Tauri, Solid and Typescript in Vite.
+This project is a small, keyboard-centric database GUI client built with SolidJS.
+
+Created by [Carlo](https://github.com/blankeos) primarily for personal use, it aims to provide a usable experience similar to tools like TablePlus or Beekeeper Studio, though with a potentially smaller feature set.
+
+Think of it as a lightweight and accessible alternative for exploring your db, but mostly made for keyboard nerds that like to breeze through the editor quickly.
 
 **Technologies Used**:
 
@@ -20,8 +24,8 @@ This template should help get you started developing with Tauri, Solid and Types
 ## Building for Production
 
 - `bun tauri build`.
-  - Installer is saved here: `./src-tauri/target/release/bundle/dmg/tauri-solid_0.0.0_aarch64.dmg`
-  - Binary is saved here: `./src-tauri/target/release/bundle/macos/tauri-solid.app/Contents/MacOS/tauri-solid` (You can run this without installing with `bun preview-mac`)
+  - Installer is saved here: `./src-tauri/target/release/bundle/dmg/snom-sql_0.0.0_aarch64.dmg`
+  - Binary is saved here: `./src-tauri/target/release/bundle/macos/snom-sql.app/Contents/MacOS/snom-sql` (You can run this without installing with `bun preview-mac`)
 - `bun preview-mac` - Try the build on Mac.
 - `bun preview-win` - Try the build on Windows.
 - `bun preview-linux` - Try the build on Linux.

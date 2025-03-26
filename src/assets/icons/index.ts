@@ -9,6 +9,7 @@ export { default as IconLogo } from './logo.svg?component-solid';
 export { default as IconAdd } from './material-symbols_add-rounded.svg?component-solid';
 export { default as IconEyeClosed } from './solar_eye-closed-line-duotone.svg?component-solid';
 export { default as IconEye } from './solar_eye-line-duotone.svg?component-solid';
+export { default as IconPlay } from './solar_play-bold.svg?component-solid';
 export { default as IconSetting } from './solar_settings-line-duotone.svg?component-solid';
 
 export { default as IconPostgresql } from './devicon_postgresql.svg?component-solid';
@@ -18,6 +19,8 @@ export { default as IconMySQL } from './logos_mysql.svg?component-solid';
 export { default as IconDatabaseSchema } from './hugeicons_book-02.svg?component-solid';
 export { default as IconDatabaseAdd } from './hugeicons_database-add.svg?component-solid';
 export { default as IconDatabaseSync } from './hugeicons_database-sync.svg?component-solid';
+export { default as IconDatabase } from './hugeicons_database.svg?component-solid';
+export { default as IconFormat } from './hugeicons_paint-brush-04.svg?component-solid';
 export { default as IconQueryFiles } from './hugeicons_quill-write-02.svg?component-solid';
 export { default as IconSQL } from './hugeicons_sql.svg?component-solid';
 
