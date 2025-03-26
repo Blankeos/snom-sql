@@ -7,6 +7,12 @@
   font-family: 'IBM Plex Mono';
 }
 
+html,
+body {
+  overscroll-behavior-y: none;
+  overscroll-behavior-x: none;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     /* color: #f6f6f6; */
