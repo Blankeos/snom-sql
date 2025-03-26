@@ -19,5 +19,6 @@ export { default as IconDatabaseSchema } from './hugeicons_book-02.svg?component
 export { default as IconDatabaseAdd } from './hugeicons_database-add.svg?component-solid';
 export { default as IconDatabaseSync } from './hugeicons_database-sync.svg?component-solid';
 export { default as IconQueryFiles } from './hugeicons_quill-write-02.svg?component-solid';
+export { default as IconSQL } from './hugeicons_sql.svg?component-solid';
 
 export { default as IconRoundedCornerBL } from './rounded-corner-bl.svg?component-solid';
