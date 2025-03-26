@@ -20,7 +20,7 @@ export const MainCommandPalette = () => {
   const [searchQuery, setSearchQuery] = createSignal('');
   const os = useOs();
 
-  const { setSidebarFocus } = useAppContext();
+  const { setSidebarFocus, setSidebarActive } = useAppContext();
 
   const COMMANDS_LIST = [
     {
@@ -28,6 +28,7 @@ export const MainCommandPalette = () => {
       title: "sidebar: focus 'connections'",
       tip: () => <Kbd>⌘ 1</Kbd>,
       onSelect: () => {
+        setSidebarActive(true);
         setSidebarFocus('connections');
       },
     },
@@ -36,6 +37,7 @@ export const MainCommandPalette = () => {
       title: "sidebar: focus 'schema'",
       tip: () => <Kbd>⌘ 2</Kbd>,
       onSelect: () => {
+        setSidebarActive(true);
         setSidebarFocus('schema');
       },
     },
@@ -44,9 +46,18 @@ export const MainCommandPalette = () => {
       title: "sidebar: focus 'query files'",
       tip: () => <Kbd>⌘ 3</Kbd>,
       onSelect: () => {
+        setSidebarActive(true);
         setSidebarFocus('queryfiles');
       },
     },
+    // Doing this will require custom filtering.
+    // {
+    //   id: 'focus-connection-name',
+    //   title: 'sidebar: focus connection name',
+    //   onselect: () => {
+    //     // setSidebarFocus('')
+    //   },
+    // },
   ];
 
   useHotkeys([
