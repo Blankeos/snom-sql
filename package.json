@@ -34,7 +34,8 @@
     "solid-js": "^1.9.5",
     "solid-resizable-panels": "^0.5.4",
     "solid-sonner": "^0.2.8",
-    "tailwind-merge": "^3.0.2"
+    "tailwind-merge": "^3.0.2",
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@blankeos/vike-routegen": "^0.0.2",

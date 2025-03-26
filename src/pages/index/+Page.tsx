@@ -1,4 +1,14 @@
-import { IconAdd, IconMySQL, IconPostgresql, IconSetting, IconSqlite } from '@/assets/icons';
+import {
+  IconAdd,
+  IconDatabaseAdd,
+  IconDatabaseSchema,
+  IconMySQL,
+  IconPostgresql,
+  IconQueryFiles,
+  IconRoundedCornerBL,
+  IconSetting,
+  IconSqlite,
+} from '@/assets/icons';
 import SettingsModal from '@/components/settings-modal';
 import { Button } from '@/components/ui/button';
 import TextField from '@/components/ui/text-field';
@@ -11,6 +21,8 @@ import { createEffect, createSignal, For, JSX, Match, on, Show, Switch } from 's
 import { Panel, PanelGroup, PanelGroupAPI, ResizeHandle } from 'solid-resizable-panels';
 import 'solid-resizable-panels/styles.css';
 
+import { Tippy } from '@/components/solid-tippy';
+import { useAppContext } from '@/contexts/app';
 import { useLiveQuery } from '@/lib/dexie-solid-hook';
 import { invoke } from '@tauri-apps/api/core';
 import { Menu } from '@tauri-apps/api/menu';
@@ -75,7 +87,7 @@ export default function Page() {
 
   useHotkeys([
     [
-      'escape',
+      'meta+w',
       () => {
         setSelectedId(null);
       },
@@ -231,74 +243,76 @@ export default function Page() {
         // maxSize={40}
         collapsible
       >
-        <div class="h-full overflow-hidden p-3">
-          <div class="h-5"></div>
-          <Button
-            class="h-8 w-full gap-x-1 truncate text-xs"
-            size="sm"
-            onClick={() => {
-              addConnection(); // for now we just add
-            }}
-          >
-            <IconAdd class="h-4 w-4 shrink-0 text-sky-300" />
-            <span class="truncate">New Connection</span>
-          </Button>
-          <h2 class="mt-3 mb-1 text-xs">Connections</h2>
-          <div class="flex flex-col gap-1">
-            <Show when={showNewConnectionForm()}>
-              <ConnectionItem
-                info={{
-                  databaseType: newConnectionForm.databaseType,
-                  id: -100,
-                  nickname: newConnectionForm.nickname,
-                }}
-                selected={false}
-                onClick={() => {}}
-                onDelete={() => {}}
-              />
-            </Show>
-            <Show when={connectionsQuery.error}>
-              {(error) => <p class="text-sm text-red-500">Error: {error()?.message}</p>}
-            </Show>
-            <Show when={!connectionsQuery.error && connectionsQuery.data?.length === 0}>
-              <div class="border-muted-foreground text-muted-foreground w-full rounded-md border border-dashed p-4 text-center text-xs">
-                No connections yet
-              </div>
-            </Show>
-            <Show when={!connectionsQuery.error && connectionsQuery.data?.length! > 0}>
-              <ul class="list-none p-0">
-                <For each={connectionsQuery.data || []}>
-                  {(connection) => (
-                    <ConnectionItem
-                      info={{
-                        databaseType: connection.database_type,
-                        id: connection.id,
-                        nickname: connection.nickname,
-                      }}
-                      onClick={() => {
-                        setSelectedId(connection.id);
-                      }}
-                      onDelete={async () => {
-                        await db.databaseConnections.delete(connection.id);
-                      }}
-                      selected={selectedId() === connection.id}
-                    />
-                  )}
-                </For>
-              </ul>
-            </Show>
-          </div>
-          <div class="absolute right-0 bottom-0 left-0 flex items-center justify-between p-3 text-xs text-gray-500">
-            <div class="text-[10px] select-none">v0.0.1</div>
-            <button class="active:scale-95" onClick={() => settingsModalActions.toggle()}>
-              <IconSetting class="h-5 w-5" />
-            </button>
-            <SettingsModal
-              open={settingsModalIsOpen()}
-              onOpenChange={(open) => {
-                if (!open) settingsModalActions.close();
+        <div class="h-full overflow-hidden">
+          <SidebarTabs />
+          <div class="p-3">
+            <Button
+              class="h-8 w-full gap-x-1 truncate text-xs"
+              size="sm"
+              onClick={() => {
+                addConnection(); // for now we just add
               }}
-            />
+            >
+              <IconAdd class="h-4 w-4 shrink-0 text-sky-300" />
+              <span class="truncate">New Connection</span>
+            </Button>
+            <h2 class="mt-3 mb-1 text-xs">Connections</h2>
+            <div class="flex flex-col gap-1">
+              <Show when={showNewConnectionForm()}>
+                <ConnectionItem
+                  info={{
+                    databaseType: newConnectionForm.databaseType,
+                    id: -100,
+                    nickname: newConnectionForm.nickname,
+                  }}
+                  selected={false}
+                  onClick={() => {}}
+                  onDelete={() => {}}
+                />
+              </Show>
+              <Show when={connectionsQuery.error}>
+                {(error) => <p class="text-sm text-red-500">Error: {error()?.message}</p>}
+              </Show>
+              <Show when={!connectionsQuery.error && connectionsQuery.data?.length === 0}>
+                <div class="border-muted-foreground text-muted-foreground w-full rounded-md border border-dashed p-4 text-center text-xs">
+                  No connections yet
+                </div>
+              </Show>
+              <Show when={!connectionsQuery.error && connectionsQuery.data?.length! > 0}>
+                <ul class="list-none p-0">
+                  <For each={connectionsQuery.data || []}>
+                    {(connection) => (
+                      <ConnectionItem
+                        info={{
+                          databaseType: connection.database_type,
+                          id: connection.id,
+                          nickname: connection.nickname,
+                        }}
+                        onClick={() => {
+                          setSelectedId(connection.id);
+                        }}
+                        onDelete={async () => {
+                          await db.databaseConnections.delete(connection.id);
+                        }}
+                        selected={selectedId() === connection.id}
+                      />
+                    )}
+                  </For>
+                </ul>
+              </Show>
+            </div>
+            <div class="absolute right-0 bottom-0 left-0 flex items-center justify-between p-3 text-xs text-gray-500">
+              <div class="text-[10px] select-none">v0.0.1</div>
+              <button class="active:scale-95" onClick={() => settingsModalActions.toggle()}>
+                <IconSetting class="h-5 w-5" />
+              </button>
+              <SettingsModal
+                open={settingsModalIsOpen()}
+                onOpenChange={(open) => {
+                  if (!open) settingsModalActions.close();
+                }}
+              />
+            </div>
           </div>
         </div>
       </Panel>
@@ -448,7 +462,6 @@ function ConnectionItem(props: {
   const showContextMenu: JSX.EventHandler<HTMLButtonElement, MouseEvent> = async (e) => {
     e.preventDefault();
 
-    console.log('askdjnajsn show');
     const menu = await Menu.new({
       items: [
         {
@@ -513,6 +526,83 @@ function ConnectionItem(props: {
           />
         </svg>
       </button>
+    </div>
+  );
+}
+
+function SidebarTabItem(props: {
+  focus: string;
+  setSidebarFocus: (focus: any) => void;
+  icon: (props: { class?: string }) => JSX.Element;
+  name: string;
+  tip: string;
+  isLast?: boolean;
+}) {
+  return (
+    <Tippy content={props.tip} props={{ arrow: false }}>
+      <button
+        class="group relative flex w-full items-center justify-center"
+        onClick={() => props.setSidebarFocus(props.name)}
+      >
+        <Show when={props.focus === props.name}>
+          <span
+            class={cn(
+              'bg-background-darker absolute inset-0 rounded-t-lg',
+              props.isLast && 'rounded-tl-lg rounded-tr-none'
+            )}
+          ></span>
+          {/* <span class="absolute right-full bottom-0 h-5 w-5 bg-green-500"></span> */}
+          <span
+            class="text-background-darker pointer-events-none absolute right-full bottom-0"
+            style={{ transform: `scale(-1,1)` }}
+          >
+            <IconRoundedCornerBL class="h-4 w-4" />
+          </span>
+          <span class="text-background-darker pointer-events-none absolute bottom-0 left-full">
+            <IconRoundedCornerBL class="h-4 w-4" />
+          </span>
+        </Show>
+        <props.icon class="relative h-4 w-4 transition group-active:scale-90" />
+      </button>
+    </Tippy>
+  );
+}
+
+function SidebarTabs() {
+  const { sidebarFocus, setSidebarFocus } = useAppContext();
+
+  const tabs = [
+    {
+      name: 'connections',
+      icon: IconDatabaseAdd,
+      tip: 'Connections',
+    },
+    {
+      name: 'schema',
+      icon: IconDatabaseSchema,
+      tip: 'Schema',
+    },
+    {
+      name: 'queryfiles',
+      icon: IconQueryFiles,
+      tip: 'Query Files',
+    },
+  ];
+
+  return (
+    <div class="bg-background-border flex h-8 w-full min-w-48 justify-around">
+      <For each={tabs}>
+        {(tab, index) => (
+          <SidebarTabItem
+            tip={tab.tip}
+            focus={sidebarFocus()}
+            setSidebarFocus={setSidebarFocus}
+            icon={tab.icon}
+            name={tab.name}
+            isLast={index() === tabs.length - 1}
+          />
+        )}
+      </For>
     </div>
   );
 }

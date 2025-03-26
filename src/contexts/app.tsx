@@ -1,17 +1,20 @@
-import { createContext, FlowComponent, useContext } from 'solid-js';
+import { createContext, createSignal, FlowComponent, useContext } from 'solid-js';
 
-export type SideBarState = {};
+export type SideBarState = 'connections' | 'schema' | 'queryfiles';
 
 // ===========================================================================
 // Context
 // ===========================================================================
 
 export type AppContextValue = {
-  // sidebarFocus: () => 'connections' | 'schema';
+  sidebarFocus: () => SideBarState;
+  setSidebarFocus: (state: SideBarState) => void;
   // mainStuff: [];
 };
 
-const AppContext = createContext({} as AppContextValue);
+const AppContext = createContext({
+  sidebarFocus: () => 'connections',
+} as AppContextValue);
 
 // ===========================================================================
 // Hook
@@ -22,5 +25,16 @@ export const useAppContext = () => useContext(AppContext);
 // Provider
 // ===========================================================================
 export const AppContextProvider: FlowComponent = (props) => {
-  return <AppContext.Provider value={{}}>{props.children}</AppContext.Provider>;
+  const [sidebarFocus, setSidebarFocus] = createSignal<SideBarState>('connections');
+
+  return (
+    <AppContext.Provider
+      value={{
+        sidebarFocus,
+        setSidebarFocus,
+      }}
+    >
+      {props.children}
+    </AppContext.Provider>
+  );
 };

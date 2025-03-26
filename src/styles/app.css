@@ -36,7 +36,8 @@
     --max: #ffffff;
     --max-100: #f7f7f9;
     --background-darker: #f8fafc;
-    --background-border: #d4d2e8;
+    /* --background-border: #d4d2e8; */
+    --background-border: #d2e4eb;
 
     --background: hsl(0, 0%, 100%);
     --foreground: hsl(0, 0%, 3.9%);

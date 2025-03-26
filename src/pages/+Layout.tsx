@@ -1,5 +1,8 @@
+import { AppContextProvider } from '@/contexts/app';
 import { ThemeContextProvider } from '@/contexts/theme';
+
 import '@/styles/app.css';
+import 'tippy.js/dist/tippy.css';
 
 import { type FlowProps } from 'solid-js';
 import { Toaster } from 'solid-sonner';
@@ -7,10 +10,11 @@ import { Toaster } from 'solid-sonner';
 export default function RootLayout(props: FlowProps) {
   return (
     <ThemeContextProvider>
-      <div class="bg-background-border h-screen overflow-hidden rounded-lg p-1.5">
-        <div class="box-sizing-[border-box] relative h-full overflow-hidden rounded-md will-change-[width,height]">
-          <div data-tauri-drag-region class="titlebar">
-            {/* <div class="titlebar-button" id="titlebar-minimize">
+      <AppContextProvider>
+        <div class="bg-background-border h-screen overflow-hidden rounded-lg p-1.5">
+          <div class="box-sizing-[border-box] relative h-full overflow-hidden rounded-md will-change-[width,height]">
+            <div data-tauri-drag-region class="titlebar">
+              {/* <div class="titlebar-button" id="titlebar-minimize">
           <img src="https://api.iconify.design/mdi:window-minimize.svg" alt="minimize" />
         </div>
         <div class="titlebar-button" id="titlebar-maximize">
@@ -19,9 +23,9 @@ export default function RootLayout(props: FlowProps) {
         <div class="titlebar-button" id="titlebar-close">
           <img src="https://api.iconify.design/mdi:close.svg" alt="close" />
         </div> */}
-          </div>
+            </div>
 
-          {/* <nav class="flex items-center justify-center gap-x-5 py-5">
+            {/* <nav class="flex items-center justify-center gap-x-5 py-5">
         <a href={getRoute('/')}>Home</a>
         <span>{' | '}</span>
         <a href={getRoute('/dashboard')}>Dashboard</a>
@@ -30,10 +34,11 @@ export default function RootLayout(props: FlowProps) {
         <span>{' | '}</span>
         <Counter />
       </nav> */}
-          {props.children}
+            {props.children}
+          </div>
         </div>
-      </div>
-      <Toaster />
+        <Toaster />
+      </AppContextProvider>
     </ThemeContextProvider>
   );
 }

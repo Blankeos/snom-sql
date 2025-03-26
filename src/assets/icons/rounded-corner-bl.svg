@@ -1,0 +1,38 @@
+<svg
+xmlns="http://www.w3.org/2000/svg"
+fill="currentColor"
+viewBox="0 0 100 100"
+>
+<defs>
+    <clipPath id="a" class="frame-clip frame-clip-def">
+    <rect
+        rx="0"
+        ry="0"
+        width="100"
+        height="100"
+        transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)"
+    />
+    </clipPath>
+</defs>
+<g clip-path="url(#a)">
+    <g class="fills">
+    <rect
+        width="100"
+        height="100"
+        class="frame-background"
+        transform="matrix(1.000000, 0.000000, 0.000000, 1.000000, 0.000000, 0.000000)"
+        style="fill-opacity: 0;"
+        ry="0"
+        rx="0"
+        fill="none"
+    />
+    </g>
+    <g class="frame-children">
+    <path
+        d="M-0.000,100.000L-0.000,50.000C-0.000,50.000,-0.000,50.000,-0.000,50.000C-0.000,77.596,22.404,100.000,50.000,100.000M0.000,0.000L0.000,0.000Z"
+        style="fill: currentColor; fill-opacity: 1;"
+        class="fills"
+    />
+    </g>
+</g>
+</svg>
