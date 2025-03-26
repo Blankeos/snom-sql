@@ -3548,6 +3548,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7fcf8323ef1faaee30a44a340193b1ac6814fd9b7b4e88e9d4519a3e4abe1cfd"
 
 [[package]]
+name = "snom-sql"
+version = "0.0.0"
+dependencies = [
+ "cocoa",
+ "native-tls",
+ "postgres-native-tls",
+ "rustls",
+ "rustls-pemfile",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-shell",
+ "tokio",
+ "tokio-native-tls",
+ "tokio-postgres",
+ "tokio-postgres-rustls",
+ "webpki-roots",
+]
+
+[[package]]
 name = "socket2"
 version = "0.5.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3987,27 +4008,6 @@ dependencies = [
  "webview2-com",
  "windows",
  "wry",
-]
-
-[[package]]
-name = "tauri-solid"
-version = "0.0.0"
-dependencies = [
- "cocoa",
- "native-tls",
- "postgres-native-tls",
- "rustls",
- "rustls-pemfile",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-shell",
- "tokio",
- "tokio-native-tls",
- "tokio-postgres",
- "tokio-postgres-rustls",
- "webpki-roots",
 ]
 
 [[package]]

@@ -16,10 +16,10 @@
       "icons/icon.ico"
     ]
   },
-  "productName": "tauri-solid",
-  "mainBinaryName": "tauri-solid",
+  "productName": "Snom SQL",
+  "mainBinaryName": "snom-sql",
   "version": "0.0.0",
-  "identifier": "com.tauri-solid.dev",
+  "identifier": "com.snom-sql.dev",
   "plugins": {},
   "app": {
     "security": {
