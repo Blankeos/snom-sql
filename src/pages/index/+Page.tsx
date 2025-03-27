@@ -115,7 +115,7 @@ export default function Page() {
                           </span>
                         }
                       >
-                        <Button class="flex gap-x-1.5">
+                        <Button class="flex gap-x-1.5" size="sm">
                           <IconPlay class="h-4 w-4 text-green-500" />
                           Run All
                         </Button>
@@ -131,6 +131,7 @@ export default function Page() {
                 </Portal>
 
                 <Button
+                  class="absolute top-2 right-2 z-20"
                   onClick={() => {
                     setPortalDestinations(
                       produce((state) => {

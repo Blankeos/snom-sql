@@ -14,7 +14,8 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-gradient-to-b to-max-100 via-max from-max hover:bg-primary/90 border border-gray-200 shadow-sm',
+        default:
+          'bg-gradient-to-b to-max-100 via-max from-max hover:bg-primary/90 border border-border shadow-sm',
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         outline: 'border border-input hover:bg-accent hover:text-accent-foreground',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
@@ -25,7 +26,7 @@ const buttonVariants = cva(
         default: 'h-10 px-3 py-2',
         sm: 'h-9 px-3',
         lg: 'h-11 px-8',
-        icon: 'size-10',
+        icon: 'size-9',
       },
     },
     defaultVariants: {
@@ -67,4 +68,3 @@ const Button = <T extends ValidComponent = 'button'>(
 
 export { Button, buttonVariants };
 export type { ButtonProps };
-
