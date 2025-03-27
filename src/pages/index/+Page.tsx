@@ -24,6 +24,7 @@ import { Button } from '@/components/ui/button';
 import { useAppContext } from '@/contexts/app';
 import { createStore, produce } from 'solid-js/store';
 import { Portal } from 'solid-js/web';
+import MainDockableArea from '@/components/sidebar-tabs/main-dockable-area';
 
 export default function Page() {
   // ===========================================================================
@@ -32,11 +33,6 @@ export default function Page() {
   const { sidebarFocus, setPanelGroupAPI, sidebarActive, setSidebarActive } = useAppContext();
 
   const [settingsModalIsOpen, settingsModalActions] = useDisclosure(false);
-
-  const [portalDestinations, setPortalDestinations] = createStore([
-    'main-1-portal',
-    'main-2-portal',
-  ]);
 
   return (
     <>
@@ -85,77 +81,7 @@ export default function Page() {
               Snom SQL
             </Button>
           </Show>
-          <Switch
-            fallback={
-              <>
-                {() => {
-                  console.log('boomer');
-                  return <></>;
-                }}
-                <Portal
-                  mount={document.getElementById(portalDestinations[0])!}
-                  ref={(x) => (x.style.display = 'contents')}
-                >
-                  <div class="relative h-full w-full">
-                    <textarea class="h-full w-full">This is the text area 🙏</textarea>
-                    <div class="absolute right-0 bottom-0 left-0 flex items-center gap-x-2 p-3">
-                      <Tippy props={{ arrow: false }} content="Format">
-                        <Button size="icon" class="rounded-full">
-                          <IconFormat class="h-4 w-4" />
-                        </Button>
-                      </Tippy>
-                      <Tippy
-                        props={{ arrow: false }}
-                        content={
-                          <span class="flex gap-x-2">
-                            <Kbd>
-                              <span>⌘</span>
-                              <span>Enter</span>
-                            </Kbd>
-                          </span>
-                        }
-                      >
-                        <Button class="flex gap-x-1.5" size="sm">
-                          <IconPlay class="h-4 w-4 text-green-500" />
-                          Run All
-                        </Button>
-                      </Tippy>
-                    </div>
-                  </div>
-                </Portal>
-                <Portal
-                  mount={document.getElementById(portalDestinations[1])!}
-                  ref={(x) => (x.style.display = 'contents')}
-                >
-                  <div>[THESE ARE RESULTS 🗓️]</div>
-                </Portal>
-
-                <Button
-                  class="absolute top-2 right-2 z-20"
-                  onClick={() => {
-                    setPortalDestinations(
-                      produce((state) => {
-                        const [o1, o2] = state;
-                        state[0] = o2;
-                        state[1] = o1;
-                      })
-                    );
-                  }}
-                >
-                  Swap panels
-                </Button>
-                <PanelGroup class="h-full" direction="column">
-                  <Panel id="main-1" class="overflow-hidden">
-                    <div id="main-1-portal" class="h-full w-full"></div>
-                  </Panel>
-                  <ResizeHandle class="!bg-max-100 relative" />
-                  <Panel id="main-2" class="overflow-hidden">
-                    <div id="main-2-portal" class="h-full w-full"></div>
-                  </Panel>
-                </PanelGroup>
-              </>
-            }
-          >
+          <Switch fallback={<MainDockableArea />}>
             <Match when={sidebarFocus() === 'connections'}>
               <ConnectionsContent />
             </Match>

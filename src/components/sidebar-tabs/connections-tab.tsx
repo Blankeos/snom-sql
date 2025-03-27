@@ -65,10 +65,7 @@ export default function ConnectionsTab(props: VoidProps<ConnectionsTabProps>) {
                     nickname: connection.nickname,
                   }}
                   onClick={() => {
-                    console.log(connection.id, 'carlo---', selectedId());
                     setSelectedId(connection.id);
-
-                    console.log('boomer', selectedId());
                   }}
                   onDelete={async () => {
                     await db.databaseConnections.delete(connection.id);

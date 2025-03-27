@@ -125,8 +125,8 @@ body {
   --color-ring: var(--ring);
   --radius: var(--radius);
 
-  --animate-in: animate-in 200ms ease-in-out;
-  --animate-out: animate-out 200ms ease-in-out;
+  --animate-in: animate-in 100ms ease-in-out;
+  --animate-out: animate-out 100ms ease-in-out;
 
   @keyframes animate-in {
     from {

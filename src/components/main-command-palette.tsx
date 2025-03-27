@@ -20,7 +20,7 @@ export const MainCommandPalette = () => {
   const [searchQuery, setSearchQuery] = createSignal('');
   const os = useOs();
 
-  const { setSidebarFocus, setSidebarActive } = useAppContext();
+  const { setSidebarFocus, sidebarActive, setSidebarActive } = useAppContext();
 
   const COMMANDS_LIST = [
     {
@@ -50,6 +50,14 @@ export const MainCommandPalette = () => {
         setSidebarFocus('queryfiles');
       },
     },
+    {
+      id: 'toggle-sidebar',
+      title: 'sidebar: toggle',
+      tip: () => <Kbd>⌘ B</Kbd>,
+      onSelect: () => {
+        setSidebarActive(!sidebarActive());
+      },
+    },
     // Doing this will require custom filtering.
     // {
     //   id: 'focus-connection-name',
@@ -60,14 +68,17 @@ export const MainCommandPalette = () => {
     // },
   ];
 
-  useHotkeys([
+  useHotkeys(
     [
-      'meta+shift+p', // Meta = cmd on Mac | Ctrl on Windows/Linux
-      () => {
-        setOpen(!open());
-      },
+      [
+        'meta+shift+p', // Meta = cmd on Mac | Ctrl on Windows/Linux
+        () => {
+          setOpen(!open());
+        },
+      ],
     ],
-  ]);
+    []
+  );
 
   // createEffect(() => {
   //   if (searchQuery) {
@@ -124,7 +135,7 @@ export const MainCommandPalette = () => {
           <div class="flex flex-col space-y-2">
             <CommandList>
               <CommandEmpty class="py-2 text-center text-sm text-neutral-500">
-                No results found. Try a different search term.
+                No commands found that match your search.
               </CommandEmpty>
 
               <CommandGroup>
@@ -137,12 +148,12 @@ export const MainCommandPalette = () => {
                     class="flex items-center justify-between"
                   >
                     <div class="flex items-center">
-                      <Show when={command.icon}>
+                      {/* <Show when={command.icon}>
                         <span class="mr-2">{command.icon}</span>
-                      </Show>
+                      </Show> */}
                       {command.title}
                     </div>
-                    <span class="text-xs text-neutral-500">{command.tip}</span>
+                    <span class="text-xs text-neutral-500">{command?.tip?.()}</span>
                   </CommandItem>
                 ))}
               </CommandGroup>
