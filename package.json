@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "serve": "vite preview",
     "tauri": "tauri",
-    "preview-mac": "./src-tauri/target/release/bundle/macos/tauri-solid.app/Contents/MacOS/tauri-solid",
+    "preview-mac": "src-tauri/target/release/bundle/macos/'Snom SQL'.app/Contents/MacOS/snom-sql",
     "preview-win": "echo -e \"I'm not sure where the build of Windows is located. Please make a PR to add this.\"",
     "preview-linux": "echo -e \"I'm not sure where the build of Linux is located. Please make a PR to add this.\"",
     "update": "bunx npm-check-updates --interactive --format group"
@@ -30,8 +30,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk-solid": "^1.1.2",
-    "corvu": "^0.7.2",
     "dexie": "^4.0.11",
+    "dockview-core": "^4.2.3",
     "solid-js": "^1.9.5",
     "solid-resizable-panels": "^0.5.4",
     "solid-sonner": "^0.2.8",

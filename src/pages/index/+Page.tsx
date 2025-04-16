@@ -2,8 +2,6 @@ import {
   IconDatabase,
   IconDatabaseAdd,
   IconDatabaseSchema,
-  IconFormat,
-  IconPlay,
   IconQueryFiles,
   IconRoundedCornerBL,
   IconSetting,
@@ -18,13 +16,11 @@ import Kbd from '@/components/kbd';
 import SettingsModal from '@/components/settings-modal';
 import ConnectionsContent from '@/components/sidebar-tabs/connections-content';
 import ConnectionsTab from '@/components/sidebar-tabs/connections-tab';
+import MainDockableArea from '@/components/sidebar-tabs/main-dockable-area';
 import QueryFilesTab from '@/components/sidebar-tabs/queryfiles-tab';
 import { Tippy } from '@/components/solid-tippy';
 import { Button } from '@/components/ui/button';
 import { useAppContext } from '@/contexts/app';
-import { createStore, produce } from 'solid-js/store';
-import { Portal } from 'solid-js/web';
-import MainDockableArea from '@/components/sidebar-tabs/main-dockable-area';
 
 export default function Page() {
   // ===========================================================================

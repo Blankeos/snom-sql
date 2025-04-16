@@ -1,122 +1,177 @@
-import { createUniqueId, mergeProps, VoidProps } from 'solid-js';
-import { createStore, produce } from 'solid-js/store';
-import { Portal } from 'solid-js/web';
-import { Tippy } from '../solid-tippy';
-import { Button } from '../ui/button';
-import { IconFormat, IconPlay } from '@/assets/icons';
-import Kbd from '../kbd';
-import { Panel, PanelGroup, ResizeHandle } from 'solid-resizable-panels';
+import {
+  createDockview,
+  DockviewApi,
+  GroupPanelPartInitParameters,
+  IContentRenderer,
+  PanelInitParameters,
+} from 'dockview-core';
+import 'dockview-core/dist/styles/dockview.css';
 
-function useDocksStore() {
-  class Dock {
-    #_id: string;
-    #_type: 'vertical' | 'horizontal';
-    #_docks: Dock[];
+import { onCleanup, onMount } from 'solid-js';
 
-    get id() {
-      return this.#_docks;
-    }
-    get docks() {
-      return { subscribe: this.#_docks };
-    }
+// Define a type for your panel class (important for type safety)
+class EditorPanel implements IContentRenderer {
+  private readonly _element: HTMLDivElement; // Specific type
+  private _params: PanelInitParameters | null = null;
 
-    constructor(initializer: { id?: string; type: 'vertical' | 'horizontal'; docks?: Dock[] }) {
-      this.#_id = initializer.id || createUniqueId();
-      this.#_type = initializer.type;
-      this.#_docks = initializer.docks ?? [];
-    }
-
-    public toVertical() {
-      this.#_type = 'vertical';
-    }
-    public toHorizontal() {
-      this.#_type = 'horizontal';
-    }
-    public addDockItem(dockItem: Dock) {
-      this.#_docks.push(dockItem);
-    }
+  get element(): HTMLElement {
+    return this._element;
   }
 
-  const [docks, setDocks] = createStore<{ docks: Dock[] }>({
-    docks: [],
-  });
+  constructor() {
+    this._element = document.createElement('div');
+    // this._element.style.width = '100%';
+    // this._element.style.height = '100%';
+    // this._element.boxSizing = 'border-box';
+    // this._element.padding = '8px';
+    // this._element.border = 'none';
+    // this._element.outline = 'none';
+    // this._element.fontFamily = 'monospace';
+    // this._element.fontSize = '14px';
+    this._element.textContent = 'This is the text area 🙏';
+  }
 
-  return { docks, setDocks };
+  init(params: GroupPanelPartInitParameters): void {
+    this._params = params;
+  }
+
+  update(params: GroupPanelPartInitParameters): void {
+    this._params = params;
+    // Potentially update the panel based on new parameters
+  }
+
+  dispose(): void {
+    // Cleanup (remove event listeners, etc.) if necessary
+  }
 }
 
-type MainDockableAreaProps = {};
+class ResultsPanel implements IContentRenderer {
+  private readonly _element: HTMLDivElement;
+  private _params: PanelInitParameters | null = null;
 
-export default function MainDockableArea(props: VoidProps<MainDockableAreaProps>) {
-  const defaultProps = mergeProps({}, props);
+  get element(): HTMLElement {
+    return this._element;
+  }
 
-  const [portalDestinations, setPortalDestinations] = createStore([
-    'main-1-portal',
-    'main-2-portal',
-  ]);
+  constructor() {
+    this._element = document.createElement('div');
+    this._element.style.padding = '10px';
+    this._element.textContent = '[THESE ARE RESULTS 🗓️]';
+  }
+
+  init(params: GroupPanelPartInitParameters): void {
+    this._params = params;
+  }
+
+  update(params: GroupPanelPartInitParameters): void {
+    this._params = params;
+  }
+
+  dispose(): void {
+    // Cleanup if needed
+  }
+}
+
+class Panel implements IContentRenderer {
+  private readonly _element: HTMLElement;
+
+  get element(): HTMLElement {
+    return this._element;
+  }
+
+  constructor() {
+    this._element = document.createElement('div');
+    this._element.style.color = 'white';
+  }
+
+  init(parameters: GroupPanelPartInitParameters): void {
+    this._element.textContent = 'Hello World';
+  }
+}
+
+export default function MainDockableArea() {
+  let containerRef!: HTMLDivElement;
+  let dockviewApi: DockviewApi;
+
+  onMount(() => {
+    dockviewApi = createDockview(containerRef, {
+      className: 'dockview-theme-abyss',
+      disableDnd: false,
+      createComponent: (options) => {
+        switch (options.name) {
+          case 'default':
+            return new Panel();
+          default:
+            return new Panel();
+        }
+      },
+    });
+
+    dockviewApi.addPanel({
+      id: 'panel_1',
+      component: 'default',
+      title: 'Panel 1',
+    });
+
+    dockviewApi.addPanel({
+      id: 'panel_2',
+      component: 'default',
+      position: { referencePanel: 'panel_1', direction: 'right' },
+      title: 'Panel 2',
+    });
+
+    dockviewApi.addPanel({
+      id: 'panel_3',
+      component: 'default',
+      position: { direction: 'below' },
+      title: 'Panel 3',
+    });
+
+    onCleanup(() => {
+      dockviewApi!.dispose();
+    });
+
+    // dockviewApi = createDockview(containerRef, {
+    //   // className: 'dockview-theme-dracula',  // Optional: Apply a theme
+
+    //   createComponent: (options) => {
+    //     switch (options.name) {
+    //       case 'editorComponent':
+    //         return new EditorPanel();
+    //       case 'resultsComponent':
+    //         return new ResultsPanel();
+    //       default:
+    //         throw new Error(`Unknown component: ${options.name}`);
+    //     }
+    //   },
+    // });
+
+    // dockviewApi.addPanel({
+    //   id: 'editor_1',
+    //   component: 'editorComponent',
+    //   title: 'Editor 1',
+    // });
+
+    // dockviewApi.addPanel({
+    //   id: 'editor_2',
+    //   component: 'editorComponent',
+    //   title: 'Editor 2',
+    //   position: { referencePanel: 'editor_1', direction: 'right' },
+    // });
+
+    // dockviewApi.addPanel({
+    //   id: 'results',
+    //   component: 'resultsComponent',
+    //   title: 'Results',
+    //   position: { referencePanel: 'editor_1', direction: 'below' },
+    // });
+  });
 
   return (
-    <>
-      <Portal
-        mount={document.getElementById(portalDestinations[0])!}
-        ref={(x) => (x.style.display = 'contents')}
-      >
-        <div class="relative h-full w-full">
-          <textarea class="h-full w-full">This is the text area 🙏</textarea>
-          <div class="absolute right-0 bottom-0 left-0 flex items-center gap-x-2 p-3">
-            <Tippy props={{ arrow: false }} content="Format">
-              <Button size="icon" class="rounded-full">
-                <IconFormat class="h-4 w-4" />
-              </Button>
-            </Tippy>
-            <Tippy
-              props={{ arrow: false }}
-              content={
-                <span class="flex gap-x-2">
-                  <Kbd>
-                    <span>⌘</span>
-                    <span>Enter</span>
-                  </Kbd>
-                </span>
-              }
-            >
-              <Button class="flex gap-x-1.5" size="sm">
-                <IconPlay class="h-4 w-4 text-green-500" />
-                Run All
-              </Button>
-            </Tippy>
-          </div>
-        </div>
-      </Portal>
-      <Portal
-        mount={document.getElementById(portalDestinations[1])!}
-        ref={(x) => (x.style.display = 'contents')}
-      >
-        <div>[THESE ARE RESULTS 🗓️]</div>
-      </Portal>
-
-      <Button
-        class="absolute top-2 right-2 z-20"
-        onClick={() => {
-          setPortalDestinations(
-            produce((state) => {
-              const [o1, o2] = state;
-              state[0] = o2;
-              state[1] = o1;
-            })
-          );
-        }}
-      >
-        Swap panels
-      </Button>
-      <PanelGroup class="h-full" direction="column">
-        <Panel id="main-1" class="overflow-hidden">
-          <div id="main-1-portal" class="h-full w-full"></div>
-        </Panel>
-        <ResizeHandle class="!bg-max-100 relative" />
-        <Panel id="main-2" class="overflow-hidden">
-          <div id="main-2-portal" class="h-full w-full"></div>
-        </Panel>
-      </PanelGroup>
-    </>
+    <div
+      ref={containerRef}
+      class="dockview-theme-dracula"
+      style="height: 100%; width: 100%; position: relative;"
+    ></div>
   );
 }
