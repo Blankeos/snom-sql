@@ -5,7 +5,7 @@
   /* --dv-tabs-container-scrollbar-color: yellow; */
 
   /* --dv-group-view-background-color: var(--background); */
-  --dv-group-view-background-color: rgba(255, 255, 255, 0);
+  /* --dv-group-view-background-color: rgba(255, 255, 255, 0); */
 
   /* --dv-tabs-and-actions-container-background-color: yellow; */
   /* --dv-activegroup-visiblepanel-tab-background-color: yellow; */
@@ -28,10 +28,32 @@
 
   .dv-tab {
     font-size: 12px;
-    @apply rounded-[5px] border;
+    @apply rounded-[5px] rounded-b-none border;
+    border-color: var(--border) !important;
+    border-bottom: 2px solid transparent !important;
+  }
+  .dv-active-group .dv-active-tab {
+    border-bottom: 2px solid white !important;
+  }
+
+  .dv-default-tab {
+    flex-direction: row-reverse;
+
+    .dv-default-tab-action > svg {
+      height: 7px !important;
+      width: 7px !important;
+      opacity: 0%;
+    }
+
+    &:hover {
+      .dv-default-tab-action > svg {
+        opacity: 100%;
+      }
+    }
   }
 
   .dv-drop-target-selection {
-    @apply rounded-[5px] border-2! border-[#ffffff];
+    @apply rounded-[5px] border-2!;
+    border-color: white !important;
   }
 }
