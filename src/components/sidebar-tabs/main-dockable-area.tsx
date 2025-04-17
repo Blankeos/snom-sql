@@ -25,19 +25,6 @@ class Dock {
   children: Dock[];
   parent: Dock | undefined;
 
-  // get id() {
-  //   return this.#_id;
-  // }
-  // get type() {
-  //   return this.#_type;
-  // }
-  // get children() {
-  //   return this.#_children;
-  // }
-  // get parent() {
-  //   return this.#_parent;
-  // }
-
   constructor(initializer: {
     id?: string;
     type: 'vertical' | 'horizontal' | 'panel' | 'tab';
@@ -61,6 +48,15 @@ class Dock {
   }
   public addDockItem(dockItem: Dock) {
     this.children.push(dockItem);
+  }
+  public insertDockItem(dockItem: Dock, index: number) {
+    if (index <= 0) {
+      this.children.unshift(dockItem);
+    } else if (index >= this.children.length) {
+      this.children.push(dockItem);
+    } else {
+      this.children.splice(index, 0, dockItem);
+    }
   }
 }
 
@@ -102,62 +98,6 @@ function useDocksStore() {
       // new Dock({ id: 'panel-5', type: 'panel', docks: [new Dock({ id: 'tab-5', type: 'tab' })] }),
     ],
   });
-
-  // const [docks, setDocks] = createStore<{ root: Dock }>({
-  //   root: new Dock({
-  //     id: 'root',
-  //     type: 'vertical',
-  //     docks: [
-  //       new Dock({ id: 'panel-1', type: 'panel', docks: [new Dock({ id: 'tab-1', type: 'tab' })] }),
-  //       new Dock({ id: 'panel-2', type: 'panel', docks: [new Dock({ id: 'tab-2', type: 'tab' })] }),
-  //       new Dock({
-  //         id: 'horizontal-1',
-  //         type: 'horizontal',
-  //         docks: [
-  //           new Dock({
-  //             id: 'panel-3',
-  //             type: 'panel',
-  //             docks: [new Dock({ id: 'tab-3', type: 'tab' })],
-  //           }),
-  //           new Dock({
-  //             id: 'panel-4',
-  //             type: 'panel',
-  //             docks: [new Dock({ id: 'tab-4', type: 'tab' })],
-  //           }),
-  //         ],
-  //       }),
-  //       // new Dock({ id: 'panel-5', type: 'panel', docks: [new Dock({ id: 'tab-5', type: 'tab' })] }),
-  //     ],
-  //   }),
-  // });
-
-  // const [docks, setDocks] = createStore<{ root: Dock }>({
-  //   root: new Dock({
-  //     id: 'root',
-  //     type: 'vertical',
-  //     docks: [
-  //       new Dock({ id: 'panel-1', type: 'panel', docks: [new Dock({ id: 'tab-1', type: 'tab' })] }),
-  //       new Dock({ id: 'panel-2', type: 'panel', docks: [new Dock({ id: 'tab-2', type: 'tab' })] }),
-  //       new Dock({
-  //         id: 'horizontal-1',
-  //         type: 'horizontal',
-  //         docks: [
-  //           new Dock({
-  //             id: 'panel-3',
-  //             type: 'panel',
-  //             docks: [new Dock({ id: 'tab-3', type: 'tab' })],
-  //           }),
-  //           new Dock({
-  //             id: 'panel-4',
-  //             type: 'panel',
-  //             docks: [new Dock({ id: 'tab-4', type: 'tab' })],
-  //           }),
-  //         ],
-  //       }),
-  //       // new Dock({ id: 'panel-5', type: 'panel', docks: [new Dock({ id: 'tab-5', type: 'tab' })] }),
-  //     ],
-  //   }),
-  // });
 
   function _getDockById(id: string, startNode: Dock = root): Dock | undefined {
     if (startNode.id === id) {
@@ -212,10 +152,6 @@ function useDocksStore() {
     const newTabId = generateShortId('tab');
     const newPanelId = generateShortId('panel');
 
-    // setDocks(
-    //   'root',
-    //   produce((_state) => {
-    console.log('setDocks.produce:', root);
     root.addDockItem(
       new Dock({
         id: newPanelId,
@@ -223,10 +159,7 @@ function useDocksStore() {
         docks: [new Dock({ id: newTabId, type: 'tab' })],
       })
     );
-    //   })
-    // );
 
-    // console.log('dock positions', unwrap(docks.root));
     setDockRenderers(
       'renderers',
       produce((_state) => {
@@ -375,7 +308,7 @@ const RenderDock: Component<{ dock: Dock }> = (props) => {
               <>
                 {/* Add Resize Handle between children */}
                 <Show when={index() > 0}>
-                  <ResizeHandle class="!bg-border hover:!bg-primary/20 relative !h-1.5" />
+                  <ResizeHandle class="!bg-border hover:!bg-primary/20 relative !h-0.5" />
                 </Show>
                 {/* Recursively render child dock */}
                 <RenderDock dock={child} />
@@ -393,7 +326,7 @@ const RenderDock: Component<{ dock: Dock }> = (props) => {
                 {/* Add Resize Handle between children */}
                 <Show when={index() > 0}>
                   {/* Adjust handle class for vertical orientation */}
-                  <ResizeHandle class="!bg-border hover:!bg-primary/20 relative !w-1.5" />
+                  <ResizeHandle class="!bg-border hover:!bg-primary/20 relative !w-0.5" />
                 </Show>
                 {/* Recursively render child dock */}
                 <RenderDock dock={child} />
@@ -412,7 +345,7 @@ const RenderDock: Component<{ dock: Dock }> = (props) => {
                 <>
                   {/* Add Resize Handle between children */}
                   <Show when={index() > 0}>
-                    <ResizeHandle class="!bg-border hover:!bg-primary/20 relative !h-1.5" />
+                    <ResizeHandle class="!bg-border hover:!bg-primary/20 relative !h-0.5" />
                   </Show>
                   {/* Recursively render child dock */}
                   <RenderDock dock={child} />
@@ -433,7 +366,7 @@ const RenderDock: Component<{ dock: Dock }> = (props) => {
                   {/* Add Resize Handle between children */}
                   <Show when={index() > 0}>
                     {/* Adjust handle class for vertical orientation */}
-                    <ResizeHandle class="!bg-border hover:!bg-primary/20 relative !w-1.5" />
+                    <ResizeHandle class="!bg-border hover:!bg-primary/20 relative !w-0.5" />
                   </Show>
                   {/* Recursively render child dock */}
                   <RenderDock dock={child} />
@@ -446,7 +379,23 @@ const RenderDock: Component<{ dock: Dock }> = (props) => {
 
       <Match when={dock().type === 'panel'}>
         <Show when={dock().children.length > 0 && dock().children[0].type === 'tab'}>
-          <Panel id={dock().id} class="h-full w-full overflow-hidden">
+          <Panel id={dock().id} class="relative h-full w-full overflow-hidden">
+            <DroppableAreas />
+            <div data-draggable-area class="flex">
+              <For each={dock().children}>
+                {(child, index) => (
+                  <div
+                    class="border p-1"
+                    draggable="true"
+                    onDragStart={(e) => {
+                      console.log('dragging', e);
+                    }}
+                  >
+                    {child.id}
+                  </div>
+                )}
+              </For>
+            </div>
             <div id={dock().children[0].id} class=""></div>
           </Panel>
         </Show>
@@ -462,3 +411,38 @@ const RenderDock: Component<{ dock: Dock }> = (props) => {
     </Switch>
   );
 };
+
+function DroppableAreas() {
+  return (
+    <>
+      <div
+        class="absolute top-0 right-0 left-0 h-1/2 rounded-lg border-2 border-white bg-white/20"
+        onDrop={() => {}}
+        onDragOver={(e) => {
+          e.preventDefault();
+        }}
+      ></div>
+      <div
+        class="absolute right-0 bottom-0 left-0 h-1/2 rounded-lg border-2 border-white bg-white/20"
+        onDrop={() => {}}
+        onDragOver={(e) => {
+          e.preventDefault();
+        }}
+      ></div>
+      <div
+        class="absolute top-0 right-0 bottom-0 w-1/2 rounded-lg border-2 border-white bg-white/20"
+        onDrop={() => {}}
+        onDragOver={(e) => {
+          e.preventDefault();
+        }}
+      ></div>
+      <div
+        class="absolute top-0 bottom-0 left-0 w-1/2 rounded-lg border-2 border-white bg-white/20"
+        onDrop={() => {}}
+        onDragOver={(e) => {
+          e.preventDefault();
+        }}
+      ></div>
+    </>
+  );
+}
