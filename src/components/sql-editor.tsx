@@ -1,22 +1,45 @@
-import { mergeProps, onMount, VoidProps } from 'solid-js';
+import { useThemeContext } from '@/contexts/theme';
+import { createEffect, mergeProps, onMount, VoidProps } from 'solid-js';
 
 // CodeMirror imports
 import { sql as langSql } from '@codemirror/lang-sql';
-import { EditorState } from '@codemirror/state';
+import { Compartment, EditorState } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
+import { vim } from '@replit/codemirror-vim';
 import { basicSetup } from 'codemirror';
-import { useThemeContext } from '@/contexts/theme';
 
 type SQLEditorProps = {};
 
 export default function SQLEditor(props: VoidProps<SQLEditorProps>) {
   const defaultProps = mergeProps({}, props);
-  
-  const { theme } = useThemeContext();
+
+  const { inferredTheme } = useThemeContext();
 
   let codeEditorContainer: HTMLDivElement | undefined;
 
   let codeEditorView: EditorView | undefined;
+
+  let themeCompartment = new Compartment();
+
+  const createThemeExtension = (isDark: boolean) => {
+    return EditorView.theme(
+      {
+        '&': {
+          // Styles the main editor element (.cm-editor)
+          height: '100%',
+        },
+        '.cm-scroller': {
+          // Styles the scrolling element
+          overflow: 'auto',
+          // height: '100%', // Often not needed if '&' height is set, but can be added if gutter issues persist
+        },
+        // '.cm-gutters': { // Direct gutter styling (usually inherits height correctly)
+        //   height: '100%',
+        // }
+      },
+      { dark: isDark }
+    );
+  };
 
   onMount(() => {
     if (typeof window === 'undefined') {
@@ -30,7 +53,8 @@ export default function SQLEditor(props: VoidProps<SQLEditorProps>) {
         extensions: [
           basicSetup,
           langSql(),
-          EditorView.theme({}, { dark: theme() === 'dark' }),
+          vim(),
+          themeCompartment.of(createThemeExtension(inferredTheme() === 'dark')),
           // EditorView.theme({
           //   '&': {
           //     height: '100%',
@@ -74,6 +98,14 @@ export default function SQLEditor(props: VoidProps<SQLEditorProps>) {
       }),
       parent: codeEditorContainer,
     });
+  });
+
+  createEffect(() => {
+    if (codeEditorView) {
+      codeEditorView.dispatch({
+        effects: themeCompartment.reconfigure(createThemeExtension(inferredTheme() === 'dark')),
+      });
+    }
   });
 
   return <div ref={codeEditorContainer} class="h-full w-full"></div>;
