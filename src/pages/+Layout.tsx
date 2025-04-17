@@ -2,6 +2,7 @@ import { AppContextProvider } from '@/contexts/app';
 import { ThemeContextProvider } from '@/contexts/theme';
 
 import '@/styles/app.css';
+import '@/styles/dockview.css';
 import 'tippy.js/dist/tippy.css';
 
 import { MainCommandPalette } from '@/components/main-command-palette';

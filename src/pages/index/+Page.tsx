@@ -66,7 +66,7 @@ export default function Page() {
             </div>
           </div>
         </Panel>
-        <ResizeHandle class="!bg-max-100 relative" />
+        <ResizeHandle class="!bg-border relative w-[1px]!" />
         <Panel id="panel-2" initialSize={100} class="bg-background relative">
           <Show when={!sidebarActive()}>
             <Button
