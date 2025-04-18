@@ -4,12 +4,14 @@ import { createEffect, createSignal, mergeProps, onMount, VoidProps } from 'soli
 // CodeMirror imports
 import { useVimModeContext } from '@/contexts/vim-mode';
 import { sql as langSql } from '@codemirror/lang-sql';
-import { Compartment, EditorState, RangeSetBuilder } from '@codemirror/state';
+import { Compartment, EditorState, RangeSet, RangeSetBuilder } from '@codemirror/state';
 import {
   Decoration,
   DecorationSet,
   EditorView,
+  gutterLineClass,
   GutterMarker,
+  highlightActiveLineGutter,
   keymap,
   ViewPlugin,
   ViewUpdate,
@@ -17,19 +19,45 @@ import {
 import { vim } from '@replit/codemirror-vim';
 import { basicSetup } from 'codemirror';
 
-const selectedLineGutterHighlight = Decoration.line({
-  attributes: { class: 'cm-selected-line-gutter' },
+// ----------- Gutter Highlighter -----------
+const selectedLineGutterMarker = new (class extends GutterMarker {
+  elementClass = 'cm-selectedLineGutter';
+})();
+const selectedLineGutterHighlighter = gutterLineClass.compute(['selection'], (state) => {
+  const selection = state.selection.main;
+  let marks = [],
+    last = -1;
+
+  if (!selection.empty) {
+    let fromLine = state.doc.lineAt(selection.from).number;
+    let toLine = state.doc.lineAt(selection.to).number;
+    for (let i = fromLine; i <= toLine; i++) {
+      const lineStart = state.doc.line(i).from;
+      marks.push(selectedLineGutterMarker.range(lineStart));
+    }
+  }
+
+  // for (let range of state.selection.ranges) {
+  //   // console.log('selection.ranges:::', state.selection.ranges);
+  //   console.log('range:::', range.head);
+  //   let linePos = state.doc.lineAt(range.head).from;
+  //   console.log('linePos:::', linePos);
+  //   marks.push(selectedLineGutterMarker.range(linePos));
+  // }
+
+  // console.log('marks:::', marks);
+  return RangeSet.of(marks);
 });
 
-// Marker Class to add presence in the gutter for selected lines
-class SelectedGutterMarker extends GutterMarker {
-  elementClass = 'cm-selected-gutter-marker'; // Class for the marker itself
-  toDOM() {
-    return document.createElement('span');
-  } // Empty span is sufficient
+function highlightSelectionGutterPlugin() {
+  return selectedLineGutterHighlighter;
 }
-const selectedGutterPresenceMarker = new SelectedGutterMarker(); // Create one instance
+// ----------- Gutter Highlighter -----------
 
+// ----------- Line Highlighter -----------
+const selectedLineContentHighlight = Decoration.line({
+  attributes: { class: 'cm-selected-line-content' },
+});
 function highlightSelectionPlugin() {
   return ViewPlugin.fromClass(
     class {
@@ -54,10 +82,7 @@ function highlightSelectionPlugin() {
           const toLine = view.state.doc.lineAt(selection.to).number;
           for (let i = fromLine; i <= toLine; i++) {
             const lineStart = view.state.doc.line(i).from;
-            builder.add(lineStart, lineStart, selectedLineGutterHighlight);
-
-            // const line = view.state.doc.line(i);
-            // builder.add(line.from, line.from, selectedGutterPresenceMarker);
+            builder.add(lineStart, lineStart, selectedLineContentHighlight);
           }
         }
         return builder.finish();
@@ -68,6 +93,7 @@ function highlightSelectionPlugin() {
     }
   );
 }
+// ----------- Line Highlighter -----------
 
 type SQLEditorProps = {};
 
@@ -100,16 +126,17 @@ export default function SQLEditor(props: VoidProps<SQLEditorProps>) {
           '.cm-scroller': { overflow: 'auto' },
 
           // Custom selector we added for 'selected lines'
-          '.cm-selected-line-gutter': {
+          '.cm-selected-line-content': {
             backgroundColor: 'rgba(255,255,0,0.1)',
-            // color: 'white',
           },
-          '.cm-activeLineGutter': {
+
+          '.cm-activeLineGutter,.cm-selectedLineGutter': {
             color: 'green',
           },
         },
         { dark: isDark }
       ),
+      highlightSelectionGutterPlugin(),
       highlightSelectionPlugin(),
     ];
   };
@@ -142,6 +169,7 @@ export default function SQLEditor(props: VoidProps<SQLEditorProps>) {
         extensions: [
           basicSetup,
           langSql(),
+          highlightActiveLineGutter(),
           vimModeCompartment.of(vimModeEnabled() ? vim() : []),
           themeCompartment.of(createThemeExtension(inferredTheme() === 'dark')),
 
