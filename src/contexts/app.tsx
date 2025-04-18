@@ -68,7 +68,8 @@ export const AppContextProvider: FlowComponent = (props) => {
         },
       ],
     ],
-    []
+    [],
+    true
   );
 
   // Effect when PanelGroupAPI is available.

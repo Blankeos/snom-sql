@@ -123,15 +123,19 @@ export default function SQLEditor(props: VoidProps<SQLEditorProps>) {
       EditorView.theme(
         {
           '&': { height: '100%' },
-          '.cm-scroller': { overflow: 'auto' },
+          '.cm-scroller': { overflow: 'auto', fontFamily: 'IBM Plex Mono', fontSize: '12px' },
 
           // Custom selector we added for 'selected lines'
           '.cm-selected-line-content': {
             backgroundColor: 'rgba(255,255,0,0.1)',
           },
 
+          '.cm-gutters': {
+            backgroundColor: 'transparent',
+            borderRight: '0px',
+          },
           '.cm-activeLineGutter,.cm-selectedLineGutter': {
-            color: 'green',
+            color: 'skyblue',
           },
         },
         { dark: isDark }

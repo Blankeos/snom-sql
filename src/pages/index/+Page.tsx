@@ -77,6 +77,15 @@ export default function Page() {
               Snom SQL
             </Button>
           </Show>
+
+          {/* Render out without losing focus (but there are bugs.) */}
+          {/* <div class={cn(sidebarFocus() !== 'connections' ? 'contents' : 'hidden')}>
+            <MainDockableArea />
+          </div>
+          <div class={cn(sidebarFocus() === 'connections' ? 'contents' : 'hidden')}>
+            <ConnectionsContent />
+          </div> */}
+
           <Switch fallback={<MainDockableArea />}>
             <Match when={sidebarFocus() === 'connections'}>
               <ConnectionsContent />
