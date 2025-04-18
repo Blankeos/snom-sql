@@ -2,6 +2,7 @@ import { useThemeContext } from '@/contexts/theme';
 import { createEffect, mergeProps, onMount, VoidProps } from 'solid-js';
 
 // CodeMirror imports
+import { useVimModeContext } from '@/contexts/vim-mode';
 import { sql as langSql } from '@codemirror/lang-sql';
 import { Compartment, EditorState } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
@@ -14,12 +15,14 @@ export default function SQLEditor(props: VoidProps<SQLEditorProps>) {
   const defaultProps = mergeProps({}, props);
 
   const { inferredTheme } = useThemeContext();
+  const { vimModeEnabled } = useVimModeContext();
 
   let codeEditorContainer: HTMLDivElement | undefined;
 
   let codeEditorView: EditorView | undefined;
 
   let themeCompartment = new Compartment();
+  let vimModeCompartment = new Compartment();
 
   const createThemeExtension = (isDark: boolean) => {
     return EditorView.theme(
@@ -53,7 +56,7 @@ export default function SQLEditor(props: VoidProps<SQLEditorProps>) {
         extensions: [
           basicSetup,
           langSql(),
-          vim(),
+          vimModeCompartment.of(vimModeEnabled() ? vim() : []),
           themeCompartment.of(createThemeExtension(inferredTheme() === 'dark')),
           // EditorView.theme({
           //   '&': {
@@ -108,5 +111,12 @@ export default function SQLEditor(props: VoidProps<SQLEditorProps>) {
     }
   });
 
+  createEffect(() => {
+    if (!codeEditorView) return;
+    
+    codeEditorView.dispatch({
+      effects: vimModeCompartment.reconfigure(vimModeEnabled() ? vim() : []),
+    })
+  });
   return <div ref={codeEditorContainer} class="h-full w-full"></div>;
 }
