@@ -12,11 +12,11 @@ import { For, JSX, Match, Show, Switch } from 'solid-js';
 import { Panel, PanelGroup, ResizeHandle } from 'solid-resizable-panels';
 import 'solid-resizable-panels/styles.css';
 
+import MainDockableArea from '@/components/dockable-area/main-dockable-area';
 import Kbd from '@/components/kbd';
 import SettingsModal from '@/components/settings-modal';
 import ConnectionsContent from '@/components/sidebar-tabs/connections-content';
 import ConnectionsTab from '@/components/sidebar-tabs/connections-tab';
-import MainDockableArea from '@/components/sidebar-tabs/main-dockable-area';
 import QueryFilesTab from '@/components/sidebar-tabs/queryfiles-tab';
 import { Tippy } from '@/components/solid-tippy';
 import { Button } from '@/components/ui/button';

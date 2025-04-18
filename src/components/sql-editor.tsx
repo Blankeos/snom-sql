@@ -97,7 +97,7 @@ function highlightSelectionPlugin() {
 
 type SQLEditorProps = {};
 
-export default function SQLEditor(props: VoidProps<SQLEditorProps>) {
+export default function SqlEditor(props: VoidProps<SQLEditorProps>) {
   const defaultProps = mergeProps({}, props);
 
   // Context

@@ -6,52 +6,12 @@ import {
 } from 'dockview-core';
 import 'dockview-core/dist/styles/dockview.css'; // Core Dockview styles
 
-import { Component, createSignal, onCleanup, onMount } from 'solid-js';
+import { Component, onCleanup, onMount } from 'solid-js';
 import { render } from 'solid-js/web'; // Import render and Disposer
-import SQLEditor from '../sql-editor';
+import { ResultsPanel } from './results-panel';
+import { SqlEditorPanel } from './sql-editor-panel';
 
-// --- 1. Define SolidJS Components ---
-
-const SqlEditorComponent: Component<{ params: GroupPanelPartInitParameters }> = (props) => {
-  const [sql, setSql] = createSignal(
-    `-- Sample SQL Queries (ID: ${props.params.id})\nSELECT * FROM users WHERE country = 'CA';\n\nSELECT COUNT(*) FROM orders;`
-  );
-
-  return (
-    <div style={{ height: '100%', display: 'flex', 'flex-direction': 'column', padding: '0px' }}>
-      <SQLEditor />
-      {/* Basic Textarea for SQL */}
-      {/* <textarea
-        style={{
-          'flex-grow': '1', // Take available space
-          'font-family': 'monospace',
-          'font-size': '13px',
-          border: '1px solid #444',
-          'background-color': '#2a2a2a', // Darker background for editor
-          color: '#ccc', // Light text
-          resize: 'none', // Optional: disable resizing
-        }}
-        value={sql()}
-        onInput={(e) => setSql(e.currentTarget.value)}
-      /> */}
-    </div>
-  );
-};
-
-const ResultsPanelComponent: Component<{ params: GroupPanelPartInitParameters }> = (props) => {
-  return (
-    <div style={{ padding: '15px', color: '#ddd' }}>
-      <h3>Results (Panel ID: {props.params.id})</h3>
-      <p style={{ 'font-family': 'monospace', 'font-size': '14px', color: 'lightgreen' }}>
-        [RESULTS GO HERE]
-      </p>
-      {/* You could potentially access panel API via props.params.api */}
-      {/* <p>Query from: {props.params.api.title}</p> */}
-    </div>
-  );
-};
-
-// --- 2. Create Renderer Classes ---
+// --- 1. Create Renderer Classes ---
 
 // Base class to handle Solid rendering and cleanup
 abstract class SolidPanelRenderer implements IContentRenderer {
@@ -97,21 +57,18 @@ abstract class SolidPanelRenderer implements IContentRenderer {
   }
 }
 
-// Specific renderer for the SQL Editor
 class SqlEditorRenderer extends SolidPanelRenderer {
   getSolidComponent() {
-    return SqlEditorComponent;
+    return SqlEditorPanel;
   }
 }
-
-// Specific renderer for the Results Panel
-class ResultsRenderer extends SolidPanelRenderer {
+class ResultsPanelRenderer extends SolidPanelRenderer {
   getSolidComponent() {
-    return ResultsPanelComponent;
+    return ResultsPanel;
   }
 }
 
-// --- 3. Main Dockable Area Component Setup ---
+// --- 2. Main Dockable Area Component Setup ---
 
 export default function MainDockableArea() {
   let containerRef!: HTMLDivElement;
@@ -134,7 +91,7 @@ export default function MainDockableArea() {
           case 'sqlEditorComponent': // Name used in addPanel
             return new SqlEditorRenderer();
           case 'resultsComponent': // Name used in addPanel
-            return new ResultsRenderer();
+            return new ResultsPanelRenderer();
           default:
             // Provide a fallback or throw an error
             console.warn(`Unknown component name: ${options.name}. Creating empty panel.`);
