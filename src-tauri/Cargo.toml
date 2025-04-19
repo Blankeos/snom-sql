@@ -15,7 +15,7 @@ tauri = { version = "2", features = ["macos-private-api"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tauri-plugin-shell = "2"
-tokio-postgres = "0.7"
+tokio-postgres = { version = "0.7", features = ["with-chrono-0_4"] }
 tokio = "1.44.1"
 native-tls = "0.2.14"
 tokio-native-tls = "0.3.1"
@@ -24,6 +24,7 @@ rustls = "0.23.25"
 rustls-pemfile = "2.2.0"
 webpki-roots = "0.26.8"
 postgres-native-tls = "0.5.1"
+chrono = { version =  "0.4.40", features = ["serde"] }
 
 [target."cfg(target_os = \"macos\")".dependencies]
 cocoa = "0.26"

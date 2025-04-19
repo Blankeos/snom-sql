@@ -87,13 +87,20 @@ fn main() {
             Ok(())
         })
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![greet, test_database_connection]) // Add this line
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            test_database_connection,
+            execute_query
+        ]) // Add this line
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
+use chrono;
 use native_tls::TlsConnector;
 use postgres_native_tls::MakeTlsConnector;
+use tokio_postgres::types::Type;
+use tokio_postgres::Row; // Import Row
 
 #[tauri::command]
 async fn test_database_connection(connection: DatabaseConnection) -> Result<String, String> {
@@ -123,6 +130,162 @@ async fn test_database_connection(connection: DatabaseConnection) -> Result<Stri
         }
         "mysql" => Err("MySQL connection test not implemented yet".into()),
         "sqlite" => Err("SQLite connection test not implemented yet".into()),
+        _ => Err("Unsupported database type".into()),
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct QueryResult {
+    pub columns: Vec<String>,
+    pub rows: Vec<Vec<String>>,
+}
+
+#[tauri::command]
+async fn execute_query(
+    connection: DatabaseConnection,
+    query: String,
+) -> Result<QueryResult, String> {
+    match connection.database_type.as_str() {
+        "postgres" => {
+            let tls_connector = TlsConnector::new()
+                .map_err(|e| format!("Failed to create TLS connector: {}", e))?;
+            let tls = MakeTlsConnector::new(tls_connector);
+
+            let (client, connection_future) =
+                tokio_postgres::connect(&connection.database_uri, tls)
+                    .await
+                    .map_err(|e| format!("Postgres connection failed: {}", e))?;
+
+            // Spawn the connection task
+            tokio::spawn(async move {
+                if let Err(e) = connection_future.await {
+                    eprintln!("connection error: {}", e);
+                }
+            });
+
+            // Execute the query
+            let result_rows: Vec<Row> = client
+                .query(query.as_str(), &[])
+                .await
+                .map_err(|e| format!("Postgres query failed: {}", e))?;
+
+            // Handle case where no rows are returned
+            if result_rows.is_empty() {
+                // Try preparing the statement to get column names even with zero rows
+                let prepared_statement = client
+                    .prepare(query.as_str())
+                    .await
+                    .map_err(|e| format!("Failed to prepare statement to get columns: {}", e))?;
+                let column_names: Vec<String> = prepared_statement
+                    .columns()
+                    .iter()
+                    .map(|col| col.name().to_string())
+                    .collect();
+                return Ok(QueryResult {
+                    columns: column_names,
+                    rows: vec![],
+                });
+            }
+
+            // Get column names from the first row
+            let first_row = &result_rows[0];
+            let columns_metadata = first_row.columns();
+
+            let column_names: Vec<String> = columns_metadata
+                .iter()
+                .map(|col| col.name().to_string())
+                .collect();
+
+            // Process rows into Vec<Vec<String>>
+            let rows: Vec<Vec<String>> = result_rows
+                .iter()
+                .map(|row| {
+                    columns_metadata
+                        .iter()
+                        .enumerate()
+                        .map(|(i, column)| {
+                            match column.type_() {
+                                // Handle common numeric types
+                                &Type::INT2 | &Type::INT4 | &Type::INT8 | &Type::OID => {
+                                    match row.try_get::<_, Option<i64>>(i) {
+                                        Ok(Some(v)) => format!("{}", v),
+                                        Ok(None) => "NULL".to_string(),
+                                        Err(_) => format!("ERR:TYPE(int)"),
+                                    }
+                                }
+                                &Type::FLOAT4 | &Type::FLOAT8 | &Type::NUMERIC => {
+                                    match row.try_get::<_, Option<f64>>(i) {
+                                        Ok(Some(v)) => format!("{}", v),
+                                        Ok(None) => "NULL".to_string(),
+                                        Err(_) => match row.try_get::<_, Option<String>>(i) {
+                                            Ok(Some(s)) => s,
+                                            Ok(None) => "NULL".to_string(),
+                                            Err(_) => format!("ERR:TYPE(float/numeric)"),
+                                        },
+                                    }
+                                }
+                                // Handle boolean
+                                &Type::BOOL => match row.try_get::<_, Option<bool>>(i) {
+                                    Ok(Some(v)) => format!("{}", v),
+                                    Ok(None) => "NULL".to_string(),
+                                    Err(_) => format!("ERR:TYPE(bool)"),
+                                },
+                                // Handle common string types
+                                &Type::TEXT | &Type::VARCHAR | &Type::NAME | &Type::UNKNOWN => {
+                                    match row.try_get::<_, Option<String>>(i) {
+                                        Ok(Some(v)) => v,
+                                        Ok(None) => "NULL".to_string(),
+                                        Err(_) => format!("ERR:TYPE(text)"),
+                                    }
+                                }
+                                // Handle bytea (binary data)
+                                &Type::BYTEA => match row.try_get::<_, Option<Vec<u8>>>(i) {
+                                    Ok(Some(v)) => format!("[{} bytes]", v.len()),
+                                    Ok(None) => "NULL".to_string(),
+                                    Err(_) => format!("ERR:TYPE(bytea)"),
+                                },
+                                // Handle Date/Time types
+                                &Type::DATE => {
+                                    match row.try_get::<_, Option<chrono::NaiveDate>>(i) {
+                                        Ok(Some(v)) => v.format("%Y-%m-%d").to_string(),
+                                        Ok(None) => "NULL".to_string(),
+                                        Err(_) => format!("ERR:TYPE(date)"),
+                                    }
+                                }
+                                &Type::TIMESTAMP => {
+                                    match row.try_get::<_, Option<chrono::NaiveDateTime>>(i) {
+                                        Ok(Some(v)) => v.format("%Y-%m-%d %H:%M:%S%.f").to_string(),
+                                        Ok(None) => "NULL".to_string(),
+                                        Err(_) => format!("ERR:TYPE(timestamp)"),
+                                    }
+                                }
+                                &Type::TIMESTAMPTZ => {
+                                    match row.try_get::<_, Option<chrono::DateTime<chrono::Utc>>>(i)
+                                    {
+                                        Ok(Some(v)) => v.to_rfc3339(),
+                                        Ok(None) => "NULL".to_string(),
+                                        Err(_) => format!("ERR:TYPE(timestamptz)"),
+                                    }
+                                }
+                                // Fallback for other types
+                                _ => match row.try_get::<_, Option<String>>(i) {
+                                    Ok(Some(v)) => v,
+                                    Ok(None) => "NULL".to_string(),
+                                    Err(_) => format!("ERR:TYPE({})", column.type_().name()),
+                                },
+                            }
+                        })
+                        .collect()
+                })
+                .collect();
+
+            Ok(QueryResult {
+                columns: column_names,
+                rows,
+            })
+        }
+        "mysql" => Err("MySQL query execution not implemented yet".into()),
+        "sqlite" => Err("SQLite query execution not implemented yet".into()),
         _ => Err("Unsupported database type".into()),
     }
 }
