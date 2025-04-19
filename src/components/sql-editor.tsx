@@ -4,7 +4,7 @@ import { createEffect, createSignal, mergeProps, onMount, VoidProps } from 'soli
 // CodeMirror imports
 import { useVimModeContext } from '@/contexts/vim-mode';
 import { sql as langSql } from '@codemirror/lang-sql';
-import { Compartment, EditorState, RangeSet, RangeSetBuilder } from '@codemirror/state';
+import { Compartment, EditorState, Prec, RangeSet, RangeSetBuilder } from '@codemirror/state';
 import {
   Decoration,
   DecorationSet,
@@ -37,15 +37,6 @@ const selectedLineGutterHighlighter = gutterLineClass.compute(['selection'], (st
     }
   }
 
-  // for (let range of state.selection.ranges) {
-  //   // console.log('selection.ranges:::', state.selection.ranges);
-  //   console.log('range:::', range.head);
-  //   let linePos = state.doc.lineAt(range.head).from;
-  //   console.log('linePos:::', linePos);
-  //   marks.push(selectedLineGutterMarker.range(linePos));
-  // }
-
-  // console.log('marks:::', marks);
   return RangeSet.of(marks);
 });
 
@@ -95,7 +86,13 @@ function highlightSelectionPlugin() {
 }
 // ----------- Line Highlighter -----------
 
-type SQLEditorProps = {};
+type SQLEditorProps = {
+  onMetaEnter: (info: {
+    selectedLinesInfo: { fromLine: number; toLine: number } | null;
+    extractedSelection: string | null;
+  }) => void;
+  onSelectedLinesChange: (info: { fromLine: number; toLine: number } | null) => void;
+};
 
 export default function SqlEditor(props: VoidProps<SQLEditorProps>) {
   const defaultProps = mergeProps({}, props);
@@ -145,9 +142,11 @@ export default function SqlEditor(props: VoidProps<SQLEditorProps>) {
     ];
   };
 
-  const handleEnter = (view: EditorView): boolean => {
+  const handleMetaEnter = (view: EditorView): boolean => {
+    console.log('meta enter---');
     const state = view.state;
     const selection = state.selection.main;
+
     if (!selection.empty) {
       const fromLine = state.doc.lineAt(selection.from);
       const toLine = state.doc.lineAt(selection.to);
@@ -156,10 +155,15 @@ export default function SqlEditor(props: VoidProps<SQLEditorProps>) {
         text += state.doc.line(i).text + (i === toLine.number ? '' : '\n');
       }
       setExtractedSelection(text);
-      console.log('Extracted Text on Enter:', text);
-      return false;
+      props.onMetaEnter({ extractedSelection: text, selectedLinesInfo: selectedLinesInfo() });
+      return true;
     }
-    return false;
+
+    props.onMetaEnter({
+      extractedSelection: codeEditorView?.state?.doc?.toString() ?? null,
+      selectedLinesInfo: null,
+    });
+    return true;
   };
 
   onMount(() => {
@@ -186,21 +190,20 @@ export default function SqlEditor(props: VoidProps<SQLEditorProps>) {
               const toLine = update.state.doc.lineAt(selection.to).number;
 
               setSelectedLinesInfo({ fromLine, toLine });
+              props.onSelectedLinesChange({ fromLine, toLine });
             } else if (update.selectionSet && update.state.selection.main.empty) {
               setSelectedLinesInfo(null);
+              props.onSelectedLinesChange(null);
             }
           }),
 
           // Attach listener for custom hotkeys
-          keymap.of([{ key: 'a', run: handleEnter }]),
+          // Mod- means Cmd- (mac) and Ctrl- (Windows/Linux)
+          Prec.highest(keymap.of([{ key: 'Mod-Enter', run: handleMetaEnter }])),
         ],
       }),
       parent: codeEditorContainer,
     });
-  });
-
-  createEffect(() => {
-    console.log('Selected Lines Info:', selectedLinesInfo());
   });
 
   // Effect for Theme changes.

@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/solid-table';
 import { GroupPanelPartInitParameters } from 'dockview-core';
-import { Component, createSignal, onMount } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
 import DataTable from '../ui/data-table';
 
 // Define the data type
@@ -62,11 +62,12 @@ const carData: CarModel[] = [
 export const ResultsPanel: Component<{ params: GroupPanelPartInitParameters }> = (props) => {
   const [count, setCount] = createSignal(0);
 
-  onMount(() => {
-    setInterval(() => {
-      console.log('Whistle while you work....');
-    }, 1000);
-  });
+  // onMount(() => {
+  //   setInterval(() => {
+  //     console.log('Whistle while you work....');
+  //   }, 1000);
+  // });
+
   return (
     <div class="h-full overflow-auto">
       {/* <Button onClick={() => setCount(count() + 1)}>Up {count()}</Button> */}
