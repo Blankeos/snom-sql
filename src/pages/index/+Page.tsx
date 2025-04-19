@@ -68,7 +68,7 @@ export default function Page() {
         </Panel>
         <ResizeHandle class="!bg-border relative w-[1px]!" />
         <Panel id="panel-2" initialSize={100} class="bg-background relative">
-          <Show when={!sidebarActive()}>
+          {/* <Show when={!sidebarActive()}>
             <Button
               class="absolute top-2 left-2 flex gap-x-1"
               onClick={() => setSidebarActive(true)}
@@ -76,7 +76,7 @@ export default function Page() {
               <IconDatabase class="h-4 w-4 text-sky-300" />
               Snom SQL
             </Button>
-          </Show>
+          </Show> */}
 
           {/* Render out without losing focus (but there are bugs.) */}
           {/* <div class={cn(sidebarFocus() !== 'connections' ? 'contents' : 'hidden')}>

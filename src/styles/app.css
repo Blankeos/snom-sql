@@ -46,6 +46,9 @@ body {
     /* --background-border: #d4d2e8; */
     --background-border: #d2e4eb;
 
+    --hint-border: oklch(0.556 0 0);
+    --hint-background: oklch(0.556 0 0 / 8%);
+
     --background: hsl(0, 0%, 100%);
     --foreground: hsl(0, 0%, 3.9%);
     --card: hsl(0, 0%, 100%);
@@ -88,6 +91,8 @@ body {
     --max-100: hsl(0, 0%, 8%);
     --background-darker: hsl(0, 0%, 8%);
     --background-border: hsl(0, 0%, 20%);
+    --hint-border: #ffffff;
+    --hint-background: rgba(255, 255, 255, 0.2);
 
     --background: hsl(0, 0%, 10%);
     --foreground: hsl(0, 0%, 98%);
