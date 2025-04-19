@@ -2,8 +2,6 @@ import {
   IconDatabase,
   IconDatabaseAdd,
   IconDatabaseSchema,
-  IconFormat,
-  IconPlay,
   IconQueryFiles,
   IconRoundedCornerBL,
   IconSetting,
@@ -14,6 +12,7 @@ import { For, JSX, Match, Show, Switch } from 'solid-js';
 import { Panel, PanelGroup, ResizeHandle } from 'solid-resizable-panels';
 import 'solid-resizable-panels/styles.css';
 
+import MainDockableArea from '@/components/dockable-area/main-dockable-area';
 import Kbd from '@/components/kbd';
 import SettingsModal from '@/components/settings-modal';
 import ConnectionsContent from '@/components/sidebar-tabs/connections-content';
@@ -22,9 +21,6 @@ import QueryFilesTab from '@/components/sidebar-tabs/queryfiles-tab';
 import { Tippy } from '@/components/solid-tippy';
 import { Button } from '@/components/ui/button';
 import { useAppContext } from '@/contexts/app';
-import { createStore, produce } from 'solid-js/store';
-import { Portal } from 'solid-js/web';
-import MainDockableArea from '@/components/sidebar-tabs/main-dockable-area';
 
 export default function Page() {
   // ===========================================================================
@@ -70,7 +66,7 @@ export default function Page() {
             </div>
           </div>
         </Panel>
-        <ResizeHandle class="!bg-max-100 relative" />
+        <ResizeHandle class="!bg-border relative w-[1px]!" />
         <Panel id="panel-2" initialSize={100} class="bg-background relative">
           <Show when={!sidebarActive()}>
             <Button
@@ -81,6 +77,15 @@ export default function Page() {
               Snom SQL
             </Button>
           </Show>
+
+          {/* Render out without losing focus (but there are bugs.) */}
+          {/* <div class={cn(sidebarFocus() !== 'connections' ? 'contents' : 'hidden')}>
+            <MainDockableArea />
+          </div>
+          <div class={cn(sidebarFocus() === 'connections' ? 'contents' : 'hidden')}>
+            <ConnectionsContent />
+          </div> */}
+
           <Switch fallback={<MainDockableArea />}>
             <Match when={sidebarFocus() === 'connections'}>
               <ConnectionsContent />

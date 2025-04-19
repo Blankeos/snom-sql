@@ -1,0 +1,65 @@
+.dockview-carlo {
+  /* --dv-paneview-active-outline-color: yellow; */
+  --dv-drag-over-background-color: rgba(255, 255, 255, 0.2);
+  /* --dv-drag-over-border-color: yellow; */
+  /* --dv-tabs-container-scrollbar-color: yellow; */
+
+  /* --dv-group-view-background-color: var(--background); */
+  /* --dv-group-view-background-color: rgba(255, 255, 255, 0); */
+
+  --dv-tabs-and-actions-container-background-color: var(--background-darker);
+  --dv-activegroup-visiblepanel-tab-background-color: var(--background);
+  /* --dv-activegroup-hiddenpanel-tab-background-color: yellow; */
+  --dv-inactivegroup-visiblepanel-tab-background-color: var(--background);
+  /* --dv-inactivegroup-hiddenpanel-tab-background-color: yellow; */
+  /* --dv-tab-divider-color: yellow; */
+  /* --dv-activegroup-visiblepanel-tab-color: yellow; */
+  /* --dv-activegroup-hiddenpanel-tab-color: yellow; */
+  /* --dv-inactivegroup-visiblepanel-tab-color: yellow; */
+  /* --dv-inactivegroup-hiddenpanel-tab-color: yellow; */
+
+  --dv-separator-border: var(--border);
+
+  /* --dv-paneview-header-border-color: yellow; */
+  /* --dv-icon-hover-background-color: yellow; */
+  /* --dv-floating-box-shadow: yellow; */
+  /* --dv-active-sash-color: yellow; */
+  /* --dv-background-color: yellow; */
+
+  .dv-tab {
+    font-size: 12px;
+    /* @apply rounded-[5px] rounded-b-none border; */
+    @apply border;
+    border-color: var(--border) !important;
+    border-bottom: 3px solid transparent !important;
+  }
+  .dv-active-group .dv-active-tab {
+    border-bottom: 3px solid skyblue !important;
+  }
+  .dv-void-container {
+    @apply border-b;
+    border-color: var(--border) !important;
+  }
+
+  .dv-default-tab {
+    flex-direction: row-reverse;
+    padding-right: 6px;
+
+    .dv-default-tab-action > svg {
+      height: 7px !important;
+      width: 7px !important;
+      opacity: 0%;
+    }
+
+    &:hover {
+      .dv-default-tab-action > svg {
+        opacity: 100%;
+      }
+    }
+  }
+
+  .dv-drop-target-selection {
+    @apply rounded-[5px] border-2!;
+    border-color: white !important;
+  }
+}

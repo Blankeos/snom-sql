@@ -2,6 +2,7 @@ import { useLocalStorage } from 'bagon-hooks';
 import {
   createContext,
   createEffect,
+  createSignal,
   FlowComponent,
   Setter,
   useContext,
@@ -19,11 +20,13 @@ export type Theme = (typeof themes)[number];
 export type ThemeContextValue = {
   theme: Accessor<Theme>;
   setTheme: Setter<Theme>;
+  inferredTheme: Accessor<Exclude<Theme, 'system'>>;
 };
 
 const ThemeContext = createContext({
   theme: () => 'light',
   setTheme: () => {},
+  inferredTheme: () => 'light',
 } as ThemeContextValue);
 
 // ===========================================================================
@@ -40,6 +43,10 @@ export const ThemeContextProvider: FlowComponent = (props) => {
     defaultValue: 'system',
   });
 
+  /** For logic that relies on literally just `light` or `dark` themes (i.e. CodeMirror). Also infers system. */
+  const [inferredTheme, setInferredTheme] =
+    createSignal<ReturnType<ThemeContextValue['inferredTheme']>>('light');
+
   createEffect(() => {
     let themeValue = theme();
 
@@ -55,6 +62,8 @@ export const ThemeContextProvider: FlowComponent = (props) => {
         document.documentElement.classList.remove(themeName);
       }
     });
+
+    setInferredTheme(themeValue);
   });
 
   return (
@@ -62,6 +71,7 @@ export const ThemeContextProvider: FlowComponent = (props) => {
       value={{
         theme,
         setTheme,
+        inferredTheme,
       }}
     >
       {props.children}

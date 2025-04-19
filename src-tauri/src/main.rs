@@ -32,6 +32,7 @@ fn main() {
             let win_builder = WebviewWindowBuilder::new(app, "main", WebviewUrl::default())
                 .title("Snom SQL")
                 .transparent(true)
+                .disable_drag_drop_handler() // <- I need this to make drag and drop work. `draggable` otherwise, it won't work.
                 .inner_size(800.0, 600.0);
 
             // set transparent title bar only when building for macOS
