@@ -1,13 +1,5 @@
 import { For, JSX, VoidProps } from 'solid-js';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from './table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table';
 
 import { ColumnDef, createSolidTable, flexRender, getCoreRowModel } from '@tanstack/solid-table';
 
@@ -29,7 +21,7 @@ export default function DataTable<TData>(props: VoidProps<DataTableProps<TData>>
 
   return (
     <Table>
-      <TableCaption>{props.caption}</TableCaption>
+      {/* <TableCaption>{props.caption}</TableCaption> */}
       <TableHeader>
         <For each={table.getHeaderGroups()}>
           {(headerGroup) => (
@@ -47,7 +39,7 @@ export default function DataTable<TData>(props: VoidProps<DataTableProps<TData>>
           )}
         </For>
       </TableHeader>
-      <TableBody>
+      <TableBody class="">
         <For each={table.getRowModel().rows}>
           {(row) => (
             <tr>

@@ -70,6 +70,20 @@ body {
 
   .dark {
     color: #f6f6f6;
+    ::-webkit-scrollbar-track {
+      background: #1e1e1e; /* Dark grey color, you can choose any color you like */
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #555; /* Medium grey color, this is the actual scrollbar */
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px; /* Width of the vertical scrollbar */
+      height: 6px; /* Height of the horizontal scrollbar */
+    }
+
     --max: hsl(0, 0%, 10%);
     --max-100: hsl(0, 0%, 8%);
     --background-darker: hsl(0, 0%, 8%);
@@ -149,6 +163,16 @@ body {
       transform: translateY(-10px);
     }
   }
+}
+
+/* https://github.com/tailwindlabs/tailwindcss-intellisense/issues/227#issuecomment-1221083129 */
+@utility no-scrollbar {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .titlebar {

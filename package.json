@@ -21,13 +21,13 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ark-ui/solid": "^5.3.1",
+    "@ark-ui/solid": "^5.6.0",
     "@codemirror/lang-sql": "^6.8.0",
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.36.5",
     "@kobalte/core": "^0.13.9",
     "@replit/codemirror-vim": "^6.3.0",
-    "@tailwindcss/vite": "^4.0.16",
+    "@tailwindcss/vite": "^4.1.4",
     "@tanstack/solid-table": "^8.21.3",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-shell": "~2",
@@ -41,23 +41,23 @@
     "solid-js": "^1.9.5",
     "solid-resizable-panels": "^0.5.4",
     "solid-sonner": "^0.2.8",
-    "tailwind-merge": "^3.0.2",
+    "tailwind-merge": "^3.2.0",
     "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@blankeos/vike-routegen": "^0.0.2",
     "@tauri-apps/cli": "^2",
-    "@types/bun": "^1.2.6",
+    "@types/bun": "^1.2.10",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4.0.16",
-    "typescript": "^5.8.2",
-    "vike": "^0.4.227",
+    "tailwindcss": "^4.1.4",
+    "typescript": "^5.8.3",
+    "vike": "^0.4.228",
     "vike-solid": "^0.7.9",
-    "vite": "^6.2.3",
+    "vite": "^6.3.2",
     "vite-plugin-solid-svg": "^0.8.1",
-    "vitest": "^3.0.9"
+    "vitest": "^3.1.1"
   }
 }

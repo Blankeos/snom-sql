@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/solid-table';
 import { GroupPanelPartInitParameters } from 'dockview-core';
-import { Component } from 'solid-js';
+import { Component, createSignal, onMount } from 'solid-js';
 import DataTable from '../ui/data-table';
 
 // Define the data type
@@ -16,11 +16,11 @@ type CarModel = {
 // Define the columns
 const columns: ColumnDef<CarModel>[] = [
   { accessorKey: 'index', header: '#' },
-  { accessorKey: 'brand_id', header: 'Brand ID' },
-  { accessorKey: 'brand_name', header: 'Brand Name' },
-  { accessorKey: 'model_base_price', header: 'Base Price' },
-  { accessorKey: 'model_id', header: 'Model ID' },
-  { accessorKey: 'model_name', header: 'Model Name' },
+  { accessorKey: 'brand_id' },
+  { accessorKey: 'brand_name' },
+  { accessorKey: 'model_base_price' },
+  { accessorKey: 'model_id' },
+  { accessorKey: 'model_name' },
 ];
 
 // Prepare the data
@@ -60,8 +60,16 @@ const carData: CarModel[] = [
 ];
 
 export const ResultsPanel: Component<{ params: GroupPanelPartInitParameters }> = (props) => {
+  const [count, setCount] = createSignal(0);
+
+  onMount(() => {
+    setInterval(() => {
+      console.log('Whistle while you work....');
+    }, 1000);
+  });
   return (
-    <div class="">
+    <div class="h-full overflow-auto">
+      {/* <Button onClick={() => setCount(count() + 1)}>Up {count()}</Button> */}
       <DataTable columns={columns} data={carData} />
     </div>
   );

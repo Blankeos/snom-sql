@@ -3,7 +3,7 @@
 import { useHotkeys, useOs } from 'bagon-hooks';
 
 import { useAppContext } from '@/contexts/app';
-import { createSignal, Show } from 'solid-js';
+import { createSignal } from 'solid-js';
 import Kbd from './kbd';
 import {
   CommandDialog,

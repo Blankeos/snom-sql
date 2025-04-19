@@ -5,11 +5,7 @@ import { cn } from '@/utils/cn';
 
 const Table: Component<ComponentProps<'table'>> = (props) => {
   const [local, others] = splitProps(props, ['class']);
-  return (
-    <div class="relative w-full overflow-auto">
-      <table class={cn('w-full caption-bottom text-sm', local.class)} {...others} />
-    </div>
-  );
+  return <table class={cn('w-full caption-bottom text-sm', local.class)} {...others} />;
 };
 
 const TableHeader: Component<ComponentProps<'thead'>> = (props) => {
@@ -34,7 +30,7 @@ const TableRow: Component<ComponentProps<'tr'>> = (props) => {
   return (
     <tr
       class={cn(
-        'hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors',
+        'hover:bg-muted/50 data-[state=selected]:bg-muted border-border border-b transition-colors',
         local.class
       )}
       {...others}
@@ -47,7 +43,7 @@ const TableHead: Component<ComponentProps<'th'>> = (props) => {
   return (
     <th
       class={cn(
-        'text-muted-foreground h-12 px-4 text-left align-middle font-medium [&:has([role=checkbox])]:pr-0',
+        'text-muted-foreground px-4 py-2 text-left align-middle text-xs font-medium [&:has([role=checkbox])]:pr-0',
         local.class
       )}
       {...others}
@@ -58,7 +54,10 @@ const TableHead: Component<ComponentProps<'th'>> = (props) => {
 const TableCell: Component<ComponentProps<'td'>> = (props) => {
   const [local, others] = splitProps(props, ['class']);
   return (
-    <td class={cn('p-4 align-middle [&:has([role=checkbox])]:pr-0', local.class)} {...others} />
+    <td
+      class={cn('px-4 py-2 align-middle text-[11px] [&:has([role=checkbox])]:pr-0', local.class)}
+      {...others}
+    />
   );
 };
 
