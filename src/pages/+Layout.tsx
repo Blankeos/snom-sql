@@ -1,5 +1,5 @@
 import { AppContextProvider } from '@/contexts/app';
-import { ThemeContextProvider } from '@/contexts/theme';
+import { ThemeContextProvider, useThemeContext } from '@/contexts/theme';
 
 import '@/styles/app.css';
 
@@ -46,10 +46,16 @@ export default function RootLayout(props: FlowProps) {
                 {props.children}
               </div>
             </div>
-            <Toaster />
+            <Toaster_ />
           </ConnectionsContextProvider>
         </AppContextProvider>
       </VimModeContextProvider>
     </ThemeContextProvider>
   );
+}
+
+function Toaster_() {
+  const { theme } = useThemeContext();
+
+  return <Toaster theme={theme()} />;
 }
