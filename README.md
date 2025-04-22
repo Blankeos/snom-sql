@@ -4,7 +4,7 @@ This project is a small, keyboard-centric database GUI client built with SolidJS
 
 Created by [Carlo](https://github.com/blankeos) primarily for personal use, it aims to provide a usable experience similar to tools like TablePlus or Beekeeper Studio, though with a potentially smaller feature set.
 
-Think of it as a lightweight and accessible alternative for exploring your db, but mostly made for keyboard nerds that like to breeze through the editor quickly.
+Think of it as a lightweight and accessible alternative for exploring your db, but mostly made for keyboard nerds that like to breeze through the editor quickly. So features like vim-mode, quickshortcuts, command palette are paramount. I just want to make it feel very very easy to use. Feel free to create an issue if you have any suggestions.
 
 **Technologies Used**:
 

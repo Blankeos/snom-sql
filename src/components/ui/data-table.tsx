@@ -42,7 +42,7 @@ export default function DataTable<TData>(props: VoidProps<DataTableProps<TData>>
       <TableBody class="">
         <For each={table.getRowModel().rows}>
           {(row) => (
-            <tr>
+            <tr class="hover:bg-muted/50 transition-colors">
               <For each={row.getVisibleCells()}>
                 {(cell) => (
                   <TableCell>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
